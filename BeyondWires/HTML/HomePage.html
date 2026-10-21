@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Customer - BeyondWires</title>
+<!-- Theme is applied before the first paint. No saved choice = Light Mode. -->
+<script>
+  (function () {
+    var t = 'light';
+    try { t = JSON.parse(localStorage.getItem('bw_theme')) === 'dark' ? 'dark' : 'light'; } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<link rel="stylesheet" href="../CSS/HomePage.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="../CSS/BWTheme.css" />
+<script src="../JS/api.js" defer></script>
+<script src="../JS/HomePage.js" defer></script>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="../Assets/forLighModeLogo.jpg" alt="Beyond Wires Logo" class="sidebar-logo logo-light" onerror="this.onerror=null;this.src='../Assets/bcklogo-removebg-preview.png'">
+        <img src="../Assets/fullbwlogo.png" alt="Beyond Wires Logo" class="sidebar-logo logo-dark">
+        <img src="../Assets/collapasedLogoLight.png" alt="Beyond Wires" class="logo-mini logo-light">
+        <img src="../Assets/BWLOGO.png" alt="Beyond Wires" class="logo-mini logo-dark">
+  </div>
+  <nav class="sidebar-nav" aria-label="Main navigation">
+    <button class="nav-item active" data-section="dashboard" aria-current="page" title="Dashboard"><i class="fa-solid fa-house"></i><span class="label">Dashboard</span></button>
+    <button class="nav-item" data-section="inquiries" title="My Inquiries"><i class="fa-solid fa-inbox"></i><span class="label">My Inquiries</span></button>
+    <button class="nav-item" data-section="quotations" title="Quotations"><i class="fa-solid fa-file-invoice"></i><span class="label">Quotations</span></button>
+    <button class="nav-item" data-section="projects" title="My Projects"><i class="fa-solid fa-diagram-project"></i><span class="label">My Projects</span></button>
+    <button class="nav-item" data-section="documents" title="Documents"><i class="fa-solid fa-folder-open"></i><span class="label">Documents</span></button>
+  </nav>
+  <div class="sidebar-section">
+    <span class="section-title">SYSTEM SUPPORT</span>
+    <button class="nav-item" data-section="settings" title="Settings"><i class="fa-solid fa-gear"></i><span class="label">Settings</span></button>
+  </div>
+</aside>
+
+  <main class="main">
+<header class="top-bar">
+  <div class="page-breadcrumb-group">
+    <span class="breadcrumb-trail" id="pageCrumb">CLIENT PORTAL &gt; DASHBOARD</span>
+    <div class="title-row">
+      <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar" title="Minimize sidebar"><i class="fa-solid fa-angles-left"></i></button>
+      <h1 id="pageTitle">Dashboard</h1>
+    </div>
+    <p id="pageSub"></p>
+  </div>
+
+  <div class="user-profile-area">
+    <div class="dropdown-container">
+      <button class="notification-btn" id="notifBtn" data-dd="notifMenu" aria-label="Notifications">
+        <i class="fa-regular fa-bell"></i>
+        <span class="notification-dot" id="notifDot"></span>
+      </button>
+      <div class="dropdown-menu notif-menu" id="notifMenu" data-keep>
+        <div class="dropdown-header"><strong>Notifications</strong><span class="mark-read" id="markAllRead" role="button" tabindex="0">Mark all read</span></div>
+        <div class="notif-list" id="notifList"></div>
+      </div>
+    </div>
+
+    <div class="dropdown-container">
+      <div class="profile-card" id="accountBtn" data-dd="accountMenu" tabindex="0" role="button">
+        <div class="avatar profile-avatar"></div>
+        <div class="profile-info"><div class="profile-name"></div><div class="profile-role">Client</div></div>
+        <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+      </div>
+      <div class="dropdown-menu" id="accountMenu">
+        <div class="user-info">
+          <div class="user-name"></div>
+          <div class="user-email"></div>
+        </div>
+        <button class="menu-btn" id="myAccountLink"><i class="fa-solid fa-gear"></i> My Account</button>
+        <button class="menu-btn danger" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="content">
+      <section class="section-view active" id="dashboard">
+        <div class="welcome">
+          <h1>Welcome back!</h1>
+          <p></p>
+        </div>
+
+        <div class="stats">
+          <article class="card stat">
+            <div class="stat-title">Active Inquiries</div>
+            <div class="stat-value">0</div>
+            <div class="stat-note"></div>
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 5h12v14H6z"/><path d="M9 9h6M9 13h4"/></svg></div>
+          </article>
+          <article class="card stat">
+            <div class="stat-title">Pending Quotations</div>
+            <div class="stat-value">0</div>
+            <div class="stat-note"></div>
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><path d="M12 9v3l2 1"/></svg></div>
+          </article>
+          <article class="card stat">
+            <div class="stat-title">Completed Projects</div>
+            <div class="stat-value">0</div>
+            <div class="stat-note"></div>
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 5h10v14H7z"/><path d="m10 12 1.5 1.5L14.5 10"/></svg></div>
+          </article>
+          <article class="card stat">
+            <div class="stat-title">Total Spent</div>
+            <div class="stat-value">₱0</div>
+            <div class="stat-note"></div>
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14v11H5z"/><path d="M8 8V5h8v3M8 13h8"/></svg></div>
+          </article>
+        </div>
+
+        <div class="lower">
+          <section class="card panel">
+            <div class="panel-head">
+              <div class="panel-title">Recent Activity Logs</div>
+              <button class="export" id="exportCsv">Export CSV</button>
+            </div>
+            <table>
+              <thead><tr><th style="width:49%">Activity / Device</th><th style="width:22%">Location</th><th style="width:17%">Timestamp</th><th style="width:12%;text-align:right">Status</th></tr></thead>
+              <tbody>
+              </tbody>
+            </table>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head"><div class="panel-title">Upcoming Site Schedules</div></div>
+            <div class="schedule-list"></div>
+          </section>
+        </div>
+
+        <button class="inquire" id="inquireBtn">Inquire Now!</button>
+      </section>
+
+<section class="section-view" id="inquiries">
+  <div class="inq-toolbar">
+    <label class="inq-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></svg>
+      <input type="text" id="inqSearch" placeholder="Search inquiries..." autocomplete="off">
+    </label>
+
+<select class="inq-select" id="inqStatus" aria-label="Filter by status">
+  <option value="all">All Status</option>
+  <option>Pending</option>
+  <option>Acknowledged</option>
+  <option>Failed</option>
+</select>
+
+    <div class="inq-date-wrap">
+      <button type="button" class="inq-outline-btn" id="inqDateBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+        <span id="inqDateLabel">Choose Date Range</span>
+      </button>
+      <div class="inq-date-pop" id="inqDatePop">
+          <label>From<input type="date" id="inqFrom" min="2019-01-01" max="2028-12-31"></label>
+          <label>To<input type="date" id="inqTo" min="2019-01-01" max="2028-12-31"></label>
+          <div class="inq-date-err" id="inqDateErr" hidden></div>
+        <div class="inq-pop-actions">
+          <button type="button" class="inq-link-btn" id="inqDateClear">Clear</button>
+          <button type="button" class="inq-primary" id="inqDateApply">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="inq-primary inq-new" id="newInquiryBtn">+ New Inquiry</button>
+  </div>
+
+  <div class="card inq-card">
+    <div class="inq-table-wrap">
+      <table class="inq-table">
+        <thead>
+          <tr>
+            <th>Inquiry ID</th><th>Date Submitted</th><th>Type</th><th>Site Visit</th>
+            <th>Status</th><th class="inq-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="inqBody"></tbody>
+      </table>
+    </div>
+    <div class="inq-foot">
+      <span id="inqCount"></span>
+      <div class="inq-pager" id="inqPager"></div>
+    </div>
+  </div>
+
+<!-- View Inquiry modal -->
+<div class="inq-modal" id="inqViewModal" aria-hidden="true">
+  <div class="inq-modal-card inq-view-card" role="dialog" aria-modal="true" aria-labelledby="inqViewTitle">
+    <button type="button" class="inq-x" data-close aria-label="Close">&times;</button>
+    <button type="button" class="si-back inq-view-back" data-close>&lsaquo; Back to My Inquiries</button>
+    <h2 id="inqViewTitle">Inquiry Details</h2>
+    <p class="inq-view-sub" id="vSub"></p>
+    <div class="inq-view-grid">
+      <div><span>Full Name</span><b id="vName"></b></div>
+      <div><span>Email / Contact Number</span><b id="vEmail"></b></div>
+    </div>
+    <div id="vBlocks"></div>
+  </div>
+</div>
+
+  <!-- New Inquiry modal -->
+  <div class="inq-modal" id="inqNewModal" aria-hidden="true">
+    <form class="inq-modal-card" id="inqNewForm" role="dialog" aria-modal="true" aria-labelledby="inqNewTitle">
+      <h2 id="inqNewTitle">New Inquiry</h2>
+      <label class="inq-field">Inquiry Type
+        <select id="nType"><option>Product</option><option>Service</option><option>Package</option><option>Custom Solution</option></select>
+      </label>
+      <label class="inq-field">Site Visit Needed?
+        <select id="nSite"><option>Yes</option><option>No</option></select>
+      </label>
+      <label class="inq-field">Notes
+        <textarea id="nNotes" rows="3" placeholder="Describe your security requirements..."></textarea>
+      </label>
+      <div class="inq-modal-actions">
+        <button type="button" class="inq-outline-btn" data-close>Cancel</button>
+        <button type="submit" class="inq-primary">Submit Inquiry</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="inq-toast" id="inqToast"></div>
+</section>
+<section class="section-view" id="quotations">
+  <div class="inq-toolbar">
+    <label class="inq-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></svg>
+      <input type="text" id="quoSearch" placeholder="Search quotations..." autocomplete="off">
+    </label>
+
+    <select class="inq-select" id="quoStatus" aria-label="Filter by status">
+      <option value="all">All Status</option>
+      <option>Pending</option>
+      <option>Approved</option>
+      <option>Completed</option>
+      <option>Declined</option>
+    </select>
+
+    <div class="inq-date-wrap">
+      <button type="button" class="inq-outline-btn" id="quoDateBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+        <span id="quoDateLabel">Choose Date Range</span>
+      </button>
+      <div class="inq-date-pop" id="quoDatePop">
+        <label>From<input type="date" id="quoFrom"></label>
+        <label>To<input type="date" id="quoTo"></label>
+        <div class="inq-pop-actions">
+          <button type="button" class="inq-link-btn" id="quoDateClear">Clear</button>
+          <button type="button" class="inq-primary" id="quoDateApply">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card inq-card">
+    <div class="inq-table-wrap">
+      <table class="inq-table">
+        <thead>
+          <tr>
+            <th>Quotation ID</th><th>Date Submitted</th><th>Status</th>
+            <th>Payment Transaction</th><th class="inq-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="quoBody"></tbody>
+      </table>
+    </div>
+    <div class="inq-foot">
+      <span id="quoCount"></span>
+      <div class="inq-pager" id="quoPager"></div>
+    </div>
+  </div>
+
+  <div class="inq-modal" id="quoViewModal" aria-hidden="true">
+    <div class="inq-modal-card" role="dialog" aria-modal="true" aria-labelledby="quoViewTitle">
+      <h2 id="quoViewTitle">Quotation Details</h2>
+      <div class="inq-detail">
+        <span>Quotation ID</span><b id="qvId"></b>
+        <span>Date Submitted</span><b id="qvDate"></b>
+        <span>Status</span><b id="qvStatus"></b>
+        <span>Payment</span><b id="qvPay"></b>
+      </div>
+      <div class="inq-modal-actions">
+        <button type="button" class="inq-outline-btn" data-close>Close</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section-view" id="projects">
+  <div class="inq-toolbar">
+    <label class="inq-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></svg>
+      <input type="text" id="prjSearch" placeholder="Search projects..." autocomplete="off">
+    </label>
+    <select class="inq-select" id="prjStatus" aria-label="Filter by status">
+      <option value="all">All Status</option>
+      <option>Scheduled</option>
+      <option>In Progress</option>
+      <option>Completed</option>
+    </select>
+    <div class="inq-date-wrap">
+      <button type="button" class="inq-outline-btn" id="prjDateBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+        <span id="prjDateLabel">Choose Date Range</span>
+      </button>
+      <div class="inq-date-pop" id="prjDatePop">
+        <label>From<input type="date" id="prjFrom"></label>
+        <label>To<input type="date" id="prjTo"></label>
+        <div class="inq-pop-actions">
+          <button type="button" class="inq-link-btn" id="prjDateClear">Clear</button>
+          <button type="button" class="inq-primary" id="prjDateApply">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card inq-card">
+    <div class="inq-table-wrap">
+      <table class="inq-table">
+        <thead>
+          <tr><th>Project Name</th><th>Project ID</th><th>Date</th><th>Status</th><th class="inq-right">Actions</th></tr>
+        </thead>
+        <tbody id="prjBody"></tbody>
+      </table>
+    </div>
+    <div class="inq-foot">
+      <span id="prjCount"></span>
+      <div class="inq-pager" id="prjPager"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-view" id="project-documents">
+  <button type="button" class="si-back" id="pdBack">&lsaquo; Back to My Projects</button>
+  <div class="card pd-head">
+    <h2 id="pdName"></h2>
+    <div class="pd-meta" id="pdMeta"></div>
+  </div>
+  <div class="doc-grid" id="pdGrid"></div>
+
+  <div class="inq-modal" id="pdModal" aria-hidden="true">
+    <div class="inq-modal-card" role="dialog" aria-modal="true" aria-labelledby="pdTitle">
+      <div class="bwd-preview" id="pdPaper"></div>
+      <h2 id="pdTitle">Document</h2>
+      <div class="inq-detail">
+        <span>Type</span><b id="pdType"></b>
+        <span>Date</span><b id="pdDate"></b>
+        <span>Status</span><b id="pdStatus"></b>
+      </div>
+      <div class="inq-modal-actions">
+        <button type="button" class="inq-outline-btn" data-close>Close</button>
+        <button type="button" class="inq-primary" id="pdDownload">Download PDF</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-view" id="documents">
+  <div class="inq-toolbar">
+    <label class="inq-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></svg>
+      <input type="text" id="docSearch" placeholder="Search documents..." autocomplete="off">
+    </label>
+
+
+    <div class="doc-views">
+      <button type="button" class="doc-view-btn active" id="docGridBtn" aria-label="Grid view" title="Grid view">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>
+      </button>
+      <button type="button" class="doc-view-btn" id="docListBtn" aria-label="List view" title="List view">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7h14M5 12h14M5 17h14"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="doc-tabs" id="docTabs">
+    <button type="button" class="doc-tab active" data-type="all">All</button>
+    <button type="button" class="doc-tab" data-type="Quotation">Quotations</button>
+    <button type="button" class="doc-tab" data-type="Receipt">Receipts</button>
+    <button type="button" class="doc-tab" data-type="Contract">Contracts</button>
+    <button type="button" class="doc-tab" data-type="Certificate">Certificates</button>
+    <button type="button" class="doc-tab" data-type="Report">Reports</button>
+  </div>
+
+  <div class="doc-grid" id="docGrid"></div>
+  <div class="inq-empty" id="docEmpty" style="display:none">No documents found.</div>
+
+  <div class="inq-modal" id="docViewModal" aria-hidden="true">
+    <div class="inq-modal-card" role="dialog" aria-modal="true" aria-labelledby="docViewTitle">
+      <h2 id="docViewTitle">Document Details</h2>
+      <div class="bwd-preview" id="dvPaper"></div>
+      <div class="inq-detail">
+        <span>Title</span><b id="dvTitle"></b>
+        <span>Type</span><b id="dvType"></b>
+        <span>Date</span><b id="dvDate"></b>
+        <span>Status</span><b id="dvStatus"></b>
+      </div>
+      <div class="inq-modal-actions">
+        <button type="button" class="inq-outline-btn" data-close>Close</button>
+        <button type="button" class="inq-primary" id="dvDownload">Download PDF</button>
+      </div>
+    </div>
+  </div>
+</section> 
+
+
+
+<section class="section-view" id="service-inquiry">
+  <form class="si-card" id="siForm" novalidate>
+    <button type="button" class="si-back" id="siBack">&lsaquo; Back to My Inquiries</button>
+    <h2 class="si-title">New Service Inquiry</h2>
+    <p class="si-sub">Please fill in the details below to submit your system specification request.</p>
+    <hr class="si-rule">
+
+    <label class="si-field">Full Name (auto-filled)
+      <input type="text" value="" placeholder="Loading your name..." readonly>
+    </label>
+    <label class="si-field">Email / Contact Number (auto-filled)
+      <input type="text" value="" placeholder="Loading your contact details..." readonly>
+    </label>
+
+    <div id="siBlocks"></div>
+
+    <p class="si-error" id="siError" hidden></p>
+    <div class="si-submit"><button type="submit" class="inq-primary">Submit Inquiry</button></div>
+    <button type="button" class="inq-outline-btn si-cancel" id="siCancel">&lsaquo; Back</button>
+  </form>
+</section>
+
+<section class="section-view" id="quotation-view">
+  <button type="button" class="si-back" id="qaBack">&lsaquo; Back to Quotations</button>
+  <div class="qa-head">
+    <h2 class="qa-title">Quotation Approval</h2>
+    <button type="button" class="inq-outline-btn" id="qaDownload">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>
+      Download
+    </button>
+  </div>
+
+  <div class="qa-layout">
+    <div class="qa-docs" id="qaDocs"></div>
+
+    <aside class="qa-panel">
+      <div class="qa-step"><span>Step 1 of 3</span><b>Quotation Approval</b></div>
+      <div class="qa-bar"><i></i></div>
+      <div class="qa-actions-title">Quotation Actions</div>
+      <p class="qa-actions-sub">Review and respond to this quotation request.</p>
+      <div class="qa-btns">
+        <button type="button" class="qa-approve" id="qaApprove">Accept Quotation</button>
+        <button type="button" class="qa-reject" id="qaReject">Not Right Now</button>
+      </div>
+      <p class="qa-result" id="qaResult" hidden></p>
+      <button type="button" class="inq-primary qa-pay" id="qaPay" hidden>Proceed to payment</button>
+      <button type="button" class="inq-outline-btn qa-resched" id="qaResched" hidden>Change installation schedule</button>
+    </aside>
+  </div>
+</section>
+
+<section class="section-view" id="settings">
+  <!-- The page title and breadcrumb are shown in the top header (same layout as the other interfaces) -->
+  <div class="st-head st-head--bar">
+    <span class="st-status" id="stStatus">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
+      <span id="stStatusText">All settings up to date</span>
+    </span>
+  </div>
+
+  <!-- Theme -->
+  <div class="card st-card">
+    <div class="st-card-head">
+      <span class="st-ico"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.5-.8 1.2-1.6-.4-1 .2-2 1.3-2H17a4 4 0 0 0 4-4c0-5-4-9-9-9Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg></span>
+      <div><h3>Theme</h3><p>Choose how BeyondWires looks across your customer dashboard.</p></div>
+    </div>
+    <div class="st-theme-row">
+      <button type="button" class="st-theme" data-theme-opt="light" aria-pressed="false">
+        <span class="st-thumb light"><span class="tb-side"></span><span class="tb-main"><span></span><span></span></span></span>
+        <span class="st-theme-text"><b>Light Mode <em class="st-active">ACTIVE</em></b><small>A bright interface for everyday work.</small></span>
+        <span class="st-radio"></span>
+      </button>
+      <button type="button" class="st-theme" data-theme-opt="dark" aria-pressed="false">
+        <span class="st-thumb dark"><span class="tb-side"></span><span class="tb-main"><span></span><span></span></span></span>
+        <span class="st-theme-text"><b>Dark Mode <em class="st-active">ACTIVE</em></b><small>Reduced glare for low-light environments.</small></span>
+        <span class="st-radio"></span>
+      </button>
+      <button type="button" class="inq-primary st-btn" id="stSaveTheme">Save theme</button>
+    </div>
+  </div>
+
+  <!-- Account settings -->
+  <div class="card st-card">
+    <div class="st-card-head">
+      <span class="st-ico"><svg viewBox="0 0 24 24"><circle cx="10" cy="8" r="4"/><path d="M3 21c0-4 3-6 7-6M17 14v1.5M17 20v1.5M14 17h1.5M19.5 17H21"/><circle cx="17" cy="17.5" r="2"/></svg></span>
+      <div><h3>Account settings</h3><p>Edit your profile details and keep your sign-in credentials secure.</p></div>
+    </div>
+    <div class="st-split">
+      <form class="st-col" id="stProfileForm" novalidate>
+        <h4 class="st-sec"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Personal information</h4>
+
+        <div class="st-field">
+          <label for="stFullName">Full name</label>
+          <div class="st-input"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><input type="text" id="stFullName" autocomplete="name"></div>
+          <small class="st-err" id="stFullNameErr"></small>
+        </div>
+
+        <div class="st-two">
+          <div class="st-field">
+            <label for="stEmail">Email address</label>
+            <div class="st-input"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><input type="text" id="stEmail" autocomplete="email"></div>
+            <small class="st-hint">Used for account notices and receipts.</small>
+            <small class="st-err" id="stEmailErr"></small>
+          </div>
+          <div class="st-field">
+            <label for="stPhone">Contact number</label>
+            <div class="st-input"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg><input type="tel" id="stPhone" autocomplete="tel" placeholder="+63 9XX XXX XXXX"></div>
+            <small class="st-hint">Used for service and appointment updates.</small>
+            <small class="st-err" id="stPhoneErr"></small>
+          </div>
+        </div>
+
+        <div class="st-actions right"><button type="submit" class="inq-primary st-btn">Update account</button></div>
+      </form>
+
+      <form class="st-col" id="stPwForm" novalidate>
+        <h4 class="st-sec"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Change password</h4>
+
+        <div class="st-field">
+          <label for="stCurPw">Current password</label>
+          <div class="st-input"><input type="password" id="stCurPw" autocomplete="current-password"><button type="button" class="st-eye" data-target="stCurPw" aria-label="Show password"></button></div>
+          <small class="st-err" id="stCurPwErr"></small>
+        </div>
+        <div class="st-two">
+          <div class="st-field">
+            <label for="stNewPw">New password</label>
+            <div class="st-input"><input type="password" id="stNewPw" autocomplete="new-password"><button type="button" class="st-eye" data-target="stNewPw" aria-label="Show password"></button></div>
+            <small class="st-err" id="stNewPwErr"></small>
+          </div>
+          <div class="st-field">
+            <label for="stConfPw">Confirm password</label>
+            <div class="st-input"><input type="password" id="stConfPw" autocomplete="new-password"><button type="button" class="st-eye" data-target="stConfPw" aria-label="Show password"></button></div>
+            <small class="st-err" id="stConfPwErr"></small>
+          </div>
+        </div>
+        <div class="st-pwhint"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>Use at least 8 characters and include a number.</div>
+        <div class="st-actions right"><button type="submit" class="st-btn-outline">Change password</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Recovery email: Forgot password also accepts it (api/auth.php /auth/recovery) -->
+  <div class="card st-card">
+    <div class="st-card-head">
+      <span class="st-ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+      <div><h3>Recovery email</h3><p>A second email for resetting your password if you ever lose access to your main email.</p></div>
+    </div>
+    <form class="st-col" id="stRecForm" novalidate>
+      <p class="st-hint" id="stRecNow"></p>
+      <div class="st-two">
+        <div class="st-field">
+          <label for="stRecEmail">Recovery email</label>
+          <div class="st-input"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><input type="text" id="stRecEmail" autocomplete="off" placeholder="another@email.com"></div>
+          <small class="st-hint">Use an email different from your main one. We send a 6-digit code to confirm it.</small>
+          <small class="st-err" id="stRecEmailErr"></small>
+        </div>
+        <div class="st-field" id="stRecCodeBox" hidden>
+          <label for="stRecCode">Verification code</label>
+          <div class="st-input"><input type="text" id="stRecCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6-digit code"></div>
+          <small class="st-hint">Check the inbox (and spam) of the recovery email. The code expires in 10 minutes.</small>
+          <small class="st-err" id="stRecCodeErr"></small>
+        </div>
+      </div>
+      <div class="st-actions right"><button type="button" class="st-btn-outline" id="stRecOther" hidden>Remove</button><button type="submit" class="inq-primary st-btn" id="stRecBtn">Send code</button></div>
+    </form>
+  </div>
+
+  <!-- Contacts -->
+  <div class="card st-card">
+    <div class="st-card-head">
+      <span class="st-ico"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M8 17c0-2 2-3 4-3s4 1 4 3"/></svg></span>
+      <div><h3>Contacts</h3><p>Manage the person we should contact first and the support channels available to your team.</p></div>
+    </div>
+    <div class="st-split">
+      <form class="st-col" id="stContactForm" novalidate>
+        <h4 class="st-sec"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M14 10h4M14 14h4M6 16c0-1.5 1.5-2 3-2s3 .5 3 2"/></svg>Primary contact information</h4>
+        <div class="st-two">
+          <div class="st-field">
+            <label for="stCName">Contact name</label>
+            <div class="st-input"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><input type="text" id="stCName"></div>
+            <small class="st-err" id="stCNameErr"></small>
+          </div>
+          <div class="st-field">
+            <label for="stCRole">Role / position</label>
+            <div class="st-input"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 13h18"/></svg><input type="text" id="stCRole"></div>
+            <small class="st-err" id="stCRoleErr"></small>
+          </div>
+          <div class="st-field">
+            <label for="stCEmail">Primary email</label>
+            <div class="st-input"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><input type="text" id="stCEmail"></div>
+            <small class="st-err" id="stCEmailErr"></small>
+          </div>
+          <div class="st-field">
+            <label for="stCPhone">Primary phone</label>
+            <div class="st-input"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg><input type="tel" id="stCPhone" placeholder="+63 9XX XXX XXXX"></div>
+            <small class="st-err" id="stCPhoneErr"></small>
+          </div>
+        </div>
+      </form>
+
+      <div class="st-col">
+        <h4 class="st-sec">BeyondWires support</h4>
+        <p class="st-hint" style="margin:-6px 0 10px">Choose the best channel when you need help.</p>
+        <a class="st-chan" href="https://mail.google.com/mail/?view=cm&amp;to=beyondwires4demo@gmail.com" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <span class="st-chan-text"><small>Support email</small><b>beyondwires4demo@gmail.com</b></span>
+          <em class="st-tag">24/7</em><span class="st-chev">&rsaquo;</span>
+        </a>
+        <a class="st-chan" href="tel:+639510010467">
+          <svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
+          <span class="st-chan-text"><small>Customer hotline</small><b>+63 951 001 0467</b></span>
+          <em class="st-tag">8 AM&ndash;6 PM</em><span class="st-chev">&rsaquo;</span>
+        </a>
+        <a class="st-chan" href="https://m.me/61580697263523" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M4 5.5h16v10H9l-5 4z"/></svg>
+          <span class="st-chan-text"><small>Facebook Messenger</small><b>Message us on Facebook</b></span>
+          <span class="st-chev">&rsaquo;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="inq-toast" id="stToast"></div>
+
+    
+    <!-- STEP 2: Payment method & schedule -->
+<section class="section-view" id="quotation-schedule">
+  <h2 class="qa-title qp-title">PAYMENT METHOD &amp; SCHEDULE</h2>
+  <form class="qp-card" id="qpForm" novalidate>
+    <div class="qa-step"><span>Step 2 of 3</span><b>Schedule &amp; Payment Agreement</b></div>
+    <div class="qa-bar"><i style="width:66.66%"></i></div>
+
+    <div class="si-sched-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+      Select Preferred Installation Schedule
+    </div>
+    <div class="si-cal">
+      <div class="si-cal-head">
+        <button type="button" id="qpPrev" aria-label="Previous month">&lsaquo;</button>
+        <b id="qpMonth"></b>
+        <button type="button" id="qpNext" aria-label="Next month">&rsaquo;</button>
+      </div>
+      <div class="si-days" id="qpDays"></div>
+      <div class="si-legend">
+        <span><i style="background:var(--blue)"></i>Available</span>
+        <span><i style="background:var(--orange)"></i>Limited Slots</span>
+        <span><i style="background:#b5bfcd"></i>Unavailable</span>
+      </div>
+    </div>
+
+    <div class="si-label">Available Time Slots</div>
+    <div class="si-slots" id="qpSlots">
+      <p class="si-hint">Choose a date to see its available time slots.</p>
+    </div>
+
+    <label class="si-field">Payment Agreement
+      <select id="qpAgreement">
+        <option value="" selected disabled>Select type...</option>
+        <option>Half payment upon quotation</option>
+        <option>Full payment upon quotation</option>
+      </select>
+    </label>
+    <label class="si-field">Payment Method
+      <select id="qpMethod">
+        <option value="" selected disabled>Select type...</option>
+        <option>Online Payment</option>
+        <option>Over the counter</option>
+      </select>
+    </label>
+
+    <p class="si-error" id="qpError" hidden></p>
+    <div class="qp-actions">
+      <button type="button" class="inq-outline-btn" id="qpBack">Back</button>
+      <button type="submit" class="inq-primary qp-submit">Submit Response</button>
+    </div>
+  </form>
+</section>
+
+<!-- STEP 3: Payment transaction & proof -->
+<section class="section-view" id="quotation-payment">
+  <button type="button" class="si-back" id="qpPayBack">&lsaquo; Back to Quotation</button>
+  <h2 class="qa-title qp-title">PAYMENT TRANSACTION</h2>
+  <div class="qp-card qp-wide">
+    <div class="qa-step"><span>Step 3 of 3</span><b>Payment Transaction &amp; Proof</b></div>
+    <div class="qa-bar"><i style="width:100%"></i></div>
+
+    <div class="qp-pay-layout">
+      <div class="qp-left">
+        <div class="qp-amount-box">
+          <span>Amount due</span>
+          <b id="qpAmount"></b>
+          <small id="qpAgreeNote"></small>
+        </div>
+
+        <!-- Online: scrollable QR choices -->
+        <div id="qpOnline">
+          <div class="si-label">Scroll to choose your online payment channel</div>
+          <div class="qp-qr-wrap">
+            <button type="button" class="qp-arrow" id="qpQrPrev" aria-label="Previous QR">&lsaquo;</button>
+            <div class="qp-qr-strip" id="qpQrStrip" tabindex="0"></div>
+            <button type="button" class="qp-arrow" id="qpQrNext" aria-label="Next QR">&rsaquo;</button>
+          </div>
+          <div class="qp-dots" id="qpDots"></div>
+        </div>
+
+        <!-- Over the counter: no QR -->
+        <div id="qpOtc" class="qp-otc" hidden>
+          <b>Over the counter payment</b>
+          <p>Visit the BeyondWires office and present your quotation ID. After paying, upload a photo of the official receipt on the right.</p>
+        </div>
+      </div>
+
+      <form class="qp-proof" id="qpProofForm" novalidate>
+        <div class="qp-proof-title">Submit Payment Proof</div>
+        <label class="qp-drop" id="qpDrop">
+          <input type="file" id="qpFile" accept="image/*,application/pdf" hidden>
+          <div id="qpDropIdle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V5m0 0-4 4m4-4 4 4M5 19h14"/></svg>
+            <b>Click to upload or drag &amp; drop</b>
+            <small>JPG, PNG or PDF, max 5MB</small>
+          </div>
+          <div id="qpPreview" class="qp-preview" hidden>
+            <img id="qpThumb" alt="" hidden>
+            <span id="qpFileName"></span>
+            <button type="button" id="qpRemove">Remove</button>
+          </div>
+        </label>
+
+        <label class="si-field">Last 4 digits of the Reference / Transaction Number
+          <input type="text" id="qpRef" inputmode="numeric" maxlength="4" placeholder="e.g. 7890">
+        </label>
+        <label class="si-field">Payment Date
+          <input type="date" id="qpPayDate">
+        </label>
+        <label class="si-field">Payment Method
+          <input type="text" id="qpMethodView" readonly>
+        </label>
+        <label class="si-field">Note (optional)
+          <input type="text" id="qpNote" placeholder="Anything we should know?">
+        </label>
+
+        <p class="si-error" id="qpProofError" hidden></p>
+        <div class="qp-actions">
+          <button type="submit" class="inq-primary qp-submit">Submit Payment Proof</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Declined card -->
+<div class="inq-modal" id="quoDeclineModal" aria-hidden="true">
+  <div class="qd-card" role="dialog" aria-modal="true" aria-labelledby="qdTitle">
+    <h2 id="qdTitle">How would you like to continue?</h2>
+    <hr>
+    <button type="button" class="qd-opt" id="qdRequest">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
+      Request a revised quotation
+    </button>
+    <button type="button" class="qd-opt danger" id="qdCancel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      No longer interested
+    </button>
+  </div>
+</div>
+<div class="inq-modal" id="rsModal" aria-hidden="true">
+  <div class="inq-modal-card rs-card" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+    <h2 id="rsTitle">Change Schedule</h2>
+    <p class="inq-view-sub" id="rsSub"></p>
+    <div class="si-cal">
+      <div class="si-cal-head">
+        <button type="button" id="rsPrev" aria-label="Previous month">&lsaquo;</button>
+        <b id="rsMonth"></b>
+        <button type="button" id="rsNext" aria-label="Next month">&rsaquo;</button>
+      </div>
+      <div class="si-days" id="rsDays"></div>
+      <div class="si-legend">
+        <span><i style="background:var(--blue)"></i>Available</span>
+        <span><i style="background:var(--orange)"></i>Limited Slots</span>
+        <span><i style="background:#b5bfcd"></i>Unavailable</span>
+      </div>
+    </div>
+    <div class="si-label">Available Time Slots</div>
+    <div class="si-slots" id="rsSlots">
+      <p class="si-hint">Choose a date to see its available time slots.</p>
+    </div>
+    <label class="si-field">Reason for rescheduling
+  <select id="rsReason">
+    <option value="" selected disabled>Select a reason...</option>
+    <option>Schedule conflict</option><option>Nobody available on-site</option>
+    <option>Weather concerns</option><option>Emergency / personal matter</option>
+    <option>Need a different time of day</option>
+    <option value="Other">Other (type your reason)</option>
+  </select>
+</label>
+<label class="si-field" id="rsOtherWrap" hidden>Tell us more
+  <textarea id="rsOther" rows="3" maxlength="200" placeholder="Type your reason..."></textarea>
+</label>
+<p class="si-error" id="rsReasonErr" hidden></p>
+    <p class="si-error" id="rsError" hidden></p>
+    <div class="inq-modal-actions">
+      <button type="button" class="inq-outline-btn" data-close>Cancel</button>
+      <button type="button" class="inq-primary" id="rsSave">Confirm change</button>
+    </div>
+  </div>
+</div>
+<div class="inq-toast" id="qpToast"></div>
+
+    </div>
+  </main>
+</div>
+
+
+
+
+</body>
+</html>

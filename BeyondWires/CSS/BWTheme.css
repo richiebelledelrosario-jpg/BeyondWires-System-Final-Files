@@ -1,0 +1,190 @@
+/* =====================================================================
+   BeyondWires - shared dashboard theme  |  CSS/BWTheme.css
+   Loaded LAST by HomePage.html, AdminHomePage.html and SuperHomePage.html
+   so the three dashboards share one look with the landing page:
+     1. BeyondWires palette (light + dark)
+     2. Sidebar + logos (open/collapsed, light/dark)
+     3. Header (breadcrumb, title, bell, profile)
+     4. Notifications (same layout and behaviour as the Super Admin page)
+     5. Subtle background detail (soft blue glow + faint grid) and cards
+   Palette (from LandingPage.css):
+     blue #0077F6 · deep blue #1B49B8 · navy #0B132B · ice #D4E6F1 · snow #F8FAFC
+     dark page #080B11 · dark section #0B132B · dark card #111827
+   ===================================================================== */
+
+/* ---------- 1. Palette ---------- */
+:root {
+    --bw-blue: #0077F6;
+    --bw-blue-deep: #1B49B8;
+    --bw-navy: #0B132B;
+    --bw-ice: #D4E6F1;
+    --bw-snow: #F8FAFC;
+    --bw-sky: #93C5FD;
+}
+
+/* Light mode (default): map each page's own tokens to the BeyondWires palette */
+html:not([data-theme="dark"]) {
+    --primary: #0077F6; --primary-hover: #1B49B8; --primary-light: #EAF3FE;
+    --blue: #0077F6; --blue-dark: #1B49B8; --blue-soft: #EAF3FE;
+    --bg-main: #F4F8FC; --bg: #F4F8FC;
+    --bw-page: #F4F8FC; --bw-card: #FFFFFF; --bw-line: #DCE8F2;
+    --bw-text: #0B132B; --bw-muted: #5A6B85; --bw-hover: #EEF5FC;
+}
+/* Super Admin + customer text tokens (the admin page sets its own in AdminHomePage.css) */
+html:not([data-theme="dark"]) body:not(.bw-admin) {
+    --text-main: #0B132B; --text-muted: #5A6B85; --border-color: #DCE8F2;
+}
+html:not([data-theme="dark"]) .app { --navy: #0B132B; --text: #0B132B; --muted: #5A6B85; --line: #DCE8F2; }
+
+/* Dark mode */
+html[data-theme="dark"] {
+    --primary: #0077F6; --primary-hover: #1B49B8;
+    --blue: #3B95F8; --blue-dark: #0077F6;
+    --bw-page: #0A1020; --bw-card: #111a2e; --bw-line: #22324f;
+    --bw-text: #F8FAFC; --bw-muted: #9AAAC2; --bw-hover: #182540;
+}
+
+/* ---------- 2. Sidebar ---------- */
+html:not([data-theme="dark"]) .sidebar {
+    background:
+        radial-gradient(ellipse 120% 40% at 0% 0%, rgba(212, 230, 241, 0.65), transparent 70%),
+        linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 55%, #EEF5FB 100%) !important;
+    color: #0B132B;
+    border-right: 1px solid #D4E6F1;
+    box-shadow: 4px 0 24px rgba(11, 19, 43, 0.05);
+}
+html[data-theme="dark"] .sidebar {
+    background:
+        radial-gradient(ellipse 120% 35% at 0% 0%, rgba(0, 119, 246, 0.14), transparent 70%),
+        linear-gradient(180deg, #0B132B 0%, #080B11 100%) !important;
+    border-right: 1px solid rgba(212, 230, 241, 0.07);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
+}
+
+html:not([data-theme="dark"]) .sidebar-header,
+html:not([data-theme="dark"]) .sidebar-section { border-color: #E2ECF5; }
+html:not([data-theme="dark"]) .section-title { color: #7A8AA3; }
+
+html:not([data-theme="dark"]) .sidebar .nav-item { color: rgba(11, 19, 43, 0.72); }
+html:not([data-theme="dark"]) .sidebar .nav-item:not(.active):hover { color: #0077F6; background: rgba(0, 119, 246, 0.08); }
+html[data-theme="dark"] .sidebar .nav-item { color: #9AAAC2; }
+html[data-theme="dark"] .sidebar .nav-item:not(.active):hover { color: #FFFFFF; background: rgba(147, 197, 253, 0.08); }
+html .sidebar .nav-item.active {
+    color: #FFFFFF;
+    background: linear-gradient(135deg, #0077F6 0%, #1B49B8 100%);
+    box-shadow: 0 6px 18px -6px rgba(0, 119, 246, 0.55);
+    font-weight: 600;
+}
+.sidebar .nav-item:focus-visible { outline: 2px solid #93C5FD; outline-offset: 2px; }
+
+/* Logos: black logo in light mode, white logo in dark mode, small mark when collapsed */
+/* The drawing sits in a wide strip (open sidebar) or a 4:3 area (collapsed) inside each logo image;
+   boxes of that shape with object-fit: cover trim the empty margin. The light-mode logos have a white
+   background, which multiply blends into the light sidebar. */
+.sidebar-header .sidebar-logo { width: 150px; height: 50px; max-width: none; max-height: none; object-fit: cover; }
+.sidebar-header .sidebar-logo.logo-light { object-position: 50% 55%; }
+.sidebar-header .logo-mini { width: 52px; height: 40px; object-fit: cover; }
+html:not([data-theme="dark"]) .sidebar .logo-light { mix-blend-mode: multiply; }
+html:not([data-theme="dark"]) .sidebar .logo-dark { display: none !important; }
+html[data-theme="dark"] .sidebar .logo-light { display: none !important; }
+
+/* ---------- 3. Header ---------- */
+.breadcrumb-trail { color: #0077F6 !important; }
+html[data-theme="dark"] .breadcrumb-trail { color: #93C5FD !important; }
+html:not([data-theme="dark"]) .title-row h1 { color: #0B132B; }
+html:not([data-theme="dark"]) .sidebar-toggle,
+html:not([data-theme="dark"]) .notification-btn,
+html:not([data-theme="dark"]) .profile-card { background: #FFFFFF; border-color: #DCE8F2; }
+.sidebar-toggle:hover, .notification-btn:hover, .profile-card:hover { color: #0077F6 !important; border-color: #0077F6 !important; }
+html:not([data-theme="dark"]) .profile-avatar:not(img) { background: #EAF3FE; color: #1B49B8; }
+html[data-theme="dark"] .profile-avatar:not(img) { background: rgba(0, 119, 246, 0.18); color: #93C5FD; }
+
+/* ---------- 4. Notifications (Super Admin layout, used on every page) ---------- */
+.notification-btn { position: relative; }
+.notification-btn > i { font-size: 15px; }
+.notification-dot {
+    position: absolute; top: 8px; right: 9px; width: 8px; height: 8px;
+    background: #ef4444; border: 2px solid var(--bw-card, #fff); border-radius: 50%;
+}
+.notif-menu { width: 320px; }
+.notif-menu .dropdown-header strong { color: var(--bw-text); font-size: 12px; }
+.notif-menu .mark-read { color: #0077F6; font-size: 11px; font-weight: 600; cursor: pointer; }
+html[data-theme="dark"] .notif-menu .mark-read { color: #93C5FD; }
+.notif-menu .notif-list { max-height: 300px; overflow-y: auto; }
+.notif-menu .notif-item {
+    display: block; padding: 10px 16px; border-bottom: 1px solid var(--bw-line);
+    font-size: 12px; line-height: 1.45; color: var(--bw-text); cursor: pointer; outline: 0;
+    transition: background-color 0.15s ease;
+}
+.notif-menu .notif-item:last-child { border-bottom: 0; }
+.notif-menu .notif-item strong { display: block; font-weight: 600; color: var(--bw-text); }
+.notif-menu .notif-item strong i { margin-right: 6px; opacity: 0.7; color: #0077F6; }
+html[data-theme="dark"] .notif-menu .notif-item strong i { color: #93C5FD; }
+.notif-menu .notif-item span { display: block; margin-top: 2px; font-size: 10px; color: var(--bw-muted); }
+.notif-menu .notif-item:hover, .notif-menu .notif-item:focus-visible { background: var(--bw-hover); }
+.notif-menu .notif-item:focus-visible { box-shadow: inset 3px 0 0 #0077F6; }
+html:not([data-theme="dark"]) .notif-menu .notif-item.unread { background: #EAF3FE; }
+html:not([data-theme="dark"]) .notif-menu .notif-item.unread:hover { background: #DFEEFD; }
+html[data-theme="dark"] .notif-menu .notif-item.unread { background: #14284a; }
+html[data-theme="dark"] .notif-menu .notif-item.unread:hover { background: #193256; }
+.notif-menu .notif-empty { padding: 18px; text-align: center; color: var(--bw-muted); font-size: 12px; }
+
+/* ---------- 5. Background detail + cards ---------- */
+/* soft blue glow and a faint grid near the top of the page, fading out (no extra elements) */
+html:not([data-theme="dark"]) .main-content,
+html:not([data-theme="dark"]) .app > .main {
+    background:
+        radial-gradient(ellipse 55% 300px at 88% 0%, rgba(0, 119, 246, 0.08), transparent 75%),
+        radial-gradient(ellipse 45% 260px at 8% 0%, rgba(212, 230, 241, 0.75), transparent 75%),
+        linear-gradient(180deg, rgba(244, 248, 252, 0) 0, #F4F8FC 360px) no-repeat,
+        linear-gradient(rgba(27, 73, 184, 0.045) 1px, transparent 1px) 0 0 / 44px 44px,
+        linear-gradient(90deg, rgba(27, 73, 184, 0.045) 1px, transparent 1px) 0 0 / 44px 44px,
+        #F4F8FC;
+}
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .app > .main {
+    background:
+        radial-gradient(ellipse 55% 300px at 88% 0%, rgba(0, 119, 246, 0.13), transparent 75%),
+        radial-gradient(ellipse 45% 260px at 8% 0%, rgba(27, 73, 184, 0.16), transparent 75%),
+        linear-gradient(180deg, rgba(10, 16, 32, 0) 0, #0A1020 360px) no-repeat,
+        linear-gradient(rgba(147, 197, 253, 0.035) 1px, transparent 1px) 0 0 / 44px 44px,
+        linear-gradient(90deg, rgba(147, 197, 253, 0.035) 1px, transparent 1px) 0 0 / 44px 44px,
+        #0A1020;
+}
+html:not([data-theme="dark"]) body { background: #F4F8FC; }
+html[data-theme="dark"] body { background: #0A1020; }
+html[data-theme="dark"] .dashboard-container,
+html[data-theme="dark"] .dashboard-layout { background: #0A1020; }
+
+/* cards: clean ice-blue borders and a very soft shadow */
+html:not([data-theme="dark"]) .card,
+html:not([data-theme="dark"]) .kpi-card,
+html:not([data-theme="dark"]) .count-chip {
+    border-color: #DCE8F2;
+    box-shadow: 0 1px 2px rgba(11, 19, 43, 0.04), 0 10px 24px -18px rgba(27, 73, 184, 0.28);
+}
+/* a faint sheen on the top of the summary cards */
+html:not([data-theme="dark"]) .kpi-card,
+html:not([data-theme="dark"]) .stat,
+html:not([data-theme="dark"]) .stat-card {
+    background-image: linear-gradient(180deg, rgba(212, 230, 241, 0.32) 0, rgba(255, 255, 255, 0) 96px);
+}
+html[data-theme="dark"] .kpi-card,
+html[data-theme="dark"] .stat,
+html[data-theme="dark"] .stat-card {
+    background-image: linear-gradient(180deg, rgba(0, 119, 246, 0.07) 0, rgba(0, 119, 246, 0) 96px);
+}
+.stat:hover, .stat-card:hover { border-color: rgba(0, 119, 246, 0.55) !important; }
+
+/* primary buttons share the brand blue */
+.btn.primary, .btn-primary, .inq-primary { background-color: #0077F6; }
+.btn.primary:hover, .btn-primary:hover, .inq-primary:hover { background-color: #1B49B8; }
+
+/* toasts */
+.toast, .bw-toast, .inq-toast { background: #0B132B; color: #F8FAFC; border-color: #1B49B8; }
+
+/* keyboard focus is always visible */
+:where(button, a, [role="button"], input, select, textarea):focus-visible { outline: 2px solid #0077F6; outline-offset: 2px; }
+
+/* Customer initials: the same round 32px badge in every list (admin and super admin) */
+.mini-av, .client-badge, .customer-info .avatar, .b-cust .avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; }

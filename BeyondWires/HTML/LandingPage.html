@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeyondWires|Security System Services</title>
+  <link rel="icon" type="image/png" href="../Assets/BWLOGO.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="../CSS/LandingPage.css">
+  <!-- Apply the saved theme before the first paint. No saved choice = Light Mode. -->
+  <script>
+    (function () {
+      var dark = false;
+      try { dark = localStorage.getItem("theme") === "dark"; } catch (e) {}
+      var h = document.documentElement;
+      h.setAttribute("data-theme", dark ? "dark" : "light");
+      if (dark) h.classList.add("dark-theme");
+    })();
+  </script>
+</head>
+<body>
+
+<header class="hero" id="top">
+
+  <!-- =========================================================
+       Account sidebar (opens from the right, next to the account icon).
+       It is the login + create account interface: no separate page.
+       Views: home (welcome) / login / signup. Logic: LandingPage.js, section 3.
+       ========================================================= -->
+  <aside class="account-panel" id="accountPanel" aria-label="Account" aria-hidden="true">
+    <div class="panel-inner">
+      <div class="panel-head">
+        <button class="panel-back" id="panelBack" type="button" aria-label="Back" hidden>
+          <span class="material-icons-round">arrow_back</span>
+        </button>
+        <h2 id="panelTitle">ACCOUNT</h2>
+        <button class="panel-close" id="panelClose" type="button" aria-label="Close account panel">
+          <span class="material-icons-round">close</span>
+        </button>
+      </div>
+
+      <!-- Home view -->
+      <div class="panel-view" id="panelHome" data-view="home">
+        <div class="panel-user">
+          <span class="material-icons-round panel-avatar">account_circle</span>
+          <h3>Welcome to BeyondWires</h3>
+          <p>Sign in to manage your security projects, or create an account to get started.</p>
+        </div>
+
+        <div class="panel-actions">
+          <button class="primary-btn full" type="button" id="panelLogin">Sign In</button>
+          <button class="ghost-btn full" type="button" id="panelCreate">Create Account</button>
+        </div>
+
+        <div class="panel-summary">
+          <h4>WHEN YOU SIGN IN</h4>
+          <div class="panel-row"><span class="material-icons-round">support_agent</span>Send service inquiries</div>
+          <div class="panel-row"><span class="material-icons-round">request_quote</span>Review your quotations</div>
+          <div class="panel-row"><span class="material-icons-round">folder_open</span>Access your documents</div>
+        </div>
+      </div>
+
+      <!-- Log In view -->
+      <div class="panel-view" id="loginView" data-view="login" hidden>
+        <p class="panel-intro">Log in to access your account and manage your projects.</p>
+        <div class="panel-notice" id="loginNotice" role="status" aria-live="polite"></div>
+
+        <form class="panel-form" id="loginForm" novalidate>
+          <label class="panel-field">
+            <span>Email</span>
+            <input id="loginEmail" name="email" type="email" placeholder="Enter your email address" autocomplete="off" readonly required>
+            <small class="field-error" id="loginEmailError"></small>
+          </label>
+
+          <label class="panel-field">
+            <span>Enter Password</span>
+            <span class="password-wrap">
+              <input id="loginPassword" name="password" type="password" placeholder="Enter your password" autocomplete="off" readonly required>
+              <button class="eye-toggle" type="button" data-password="loginPassword" aria-label="Show password" aria-pressed="false"><svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </span>
+            <small class="field-error" id="loginPasswordError"></small>
+          </label>
+          <p class="panel-switch" style="text-align:right;margin:-4px 0 4px"><a class="text-link" href="ResetPassword.html">Forgot password?</a></p>
+
+          <button class="primary-btn full" type="submit">Log In</button>
+        </form>
+
+        <p class="panel-switch">Don't have an account?
+          <button class="text-link" type="button" data-view-switch="signup">Create one</button>
+        </p>
+      </div>
+
+      <!-- Create Account view -->
+      <div class="panel-view" id="signupView" data-view="signup" hidden>
+        <p class="panel-intro">Get started with your BeyondWires account today.</p>
+        <div class="panel-notice" id="signupNotice" role="status" aria-live="polite"></div>
+
+        <form class="panel-form" id="signupForm" novalidate>
+          <div class="name-grid">
+            <label class="panel-field">
+              <span>First Name</span>
+              <input id="firstName" name="firstName" type="text" placeholder="John" autocomplete="given-name" required>
+              <small class="field-error" id="firstNameError"></small>
+            </label>
+            <label class="panel-field">
+              <span>Last Name</span>
+              <input id="lastName" name="lastName" type="text" placeholder="Doe" autocomplete="family-name" required>
+              <small class="field-error" id="lastNameError"></small>
+            </label>
+          </div>
+
+          <label class="panel-field">
+            <span>Email Address</span>
+            <input id="signupEmail" name="email" type="email" placeholder="you@gmail.com" autocomplete="email" required>
+            <small class="field-error" id="signupEmailError"></small>
+          </label>
+
+          <label class="panel-field">
+            <span>Create Password</span>
+            <span class="password-wrap">
+              <input id="signupPassword" name="password" type="password" placeholder="Create a password" autocomplete="new-password" required>
+              <button class="eye-toggle" type="button" data-password="signupPassword" aria-label="Show password" aria-pressed="false"><svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </span>
+            <small class="field-hint">Use at least 8 characters, including a number.</small>
+            <small class="field-error" id="signupPasswordError"></small>
+          </label>
+
+          <label class="panel-field">
+            <span>Confirm Password</span>
+            <span class="password-wrap">
+              <input id="signupConfirm" name="confirmPassword" type="password" placeholder="Re-enter your password" autocomplete="new-password" required>
+              <button class="eye-toggle" type="button" data-password="signupConfirm" aria-label="Show password" aria-pressed="false"><svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </span>
+            <small class="field-error" id="signupConfirmError"></small>
+          </label>
+
+          <button class="primary-btn full" type="submit">Create Account</button>
+        </form>
+
+        <p class="panel-switch">Already have an account?
+          <button class="text-link" type="button" data-view-switch="login">Log In</button>
+        </p>
+      </div>
+
+      <!-- Email verification: shown after sign-up, or when an unverified account logs in -->
+      <div class="panel-view" id="verifyView" data-view="verify" hidden>
+        <p class="panel-intro">We sent a 6-digit code to <strong id="verifyEmailText"></strong>. Enter it below to activate your account.</p>
+        <div class="panel-notice" id="verifyNotice" role="status" aria-live="polite"></div>
+
+        <form class="panel-form" id="verifyForm" novalidate>
+          <label class="panel-field">
+            <span>Verification Code</span>
+            <input id="verifyCode" name="code" type="text" inputmode="numeric" maxlength="6" placeholder="6-digit code" autocomplete="one-time-code" required>
+            <small class="field-hint">The code expires in 10 minutes. Check your spam folder too.</small>
+            <small class="field-error" id="verifyCodeError"></small>
+          </label>
+
+          <button class="primary-btn full" type="submit">Verify Email</button>
+        </form>
+
+        <p class="panel-switch">Didn't get the code?
+          <button class="text-link" type="button" id="verifyResend">Send a new code</button>
+        </p>
+      </div>
+
+      <p class="panel-foot"><span class="material-icons-round">lock</span>Secure access by BeyondWires</p>
+    </div>
+  </aside>
+
+  <!-- Rounded "card" that holds the nav, the animation and the hero text -->
+  <div class="hero-frame">
+
+    <div class="hero-top">
+      <a class="brand" id="brandLink" href="#home" aria-label="BeyondWires">
+        <img class="brand-logo brand-logo--light" src="../Assets/forLighModeLogo.jpg" alt="BEYONDWIRES">
+        <img class="brand-logo brand-logo--dark" src="../Assets/fullbwlogo.png" alt="BEYONDWIRES">
+      </a>
+
+      <nav class="hero-nav" aria-label="Primary">
+        <a href="#works">Our Works</a>
+        <a href="#services">Services</a>
+        <a href="#products">Products</a>
+        <a href="#packages">Packages</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <!-- Upper Right Controls (Theme Toggle + Account Button) -->
+      <div class="top-controls">
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle dark/light mode">
+          <span class="material-icons-round" id="themeIcon">dark_mode</span>
+        </button>
+
+        <button class="account-btn" id="accountBtn" aria-label="Log in or create account"
+                aria-controls="accountPanel" aria-expanded="false">
+          <span class="material-icons-round">account_circle</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stage: giant background text + padlock -->
+    <div class="hero-stage">
+      <div class="hero-bgtext" aria-hidden="true"><span>BEYOND</span><span>WIRES</span></div>
+
+      <div class="lock-scene is-playing" id="lockScene">
+        <div class="lock-glow"></div>
+
+        <div class="lock-fly" role="button" tabindex="0" aria-label="Padlock locking. Press to replay the animation">
+          <div class="lock-shadow"></div>
+          <div class="lock-tilt">
+            <div class="lock-float">
+              <svg class="lock-svg" viewBox="0 0 300 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1">
+                   <stop offset="0" stop-color="#F8FAFC"/>
+                    <stop offset=".45" stop-color="#D4E6F1"/>
+                    <stop offset="1" stop-color="#93C5FD"/>
+                  </linearGradient>
+                  <linearGradient id="gSide" x1="0" y1="0" x2="1" y2="0">
+                   <stop offset="0" stop-color="#1B49B8" stop-opacity=".55"/>
+                    <stop offset=".18" stop-color="#ffffff" stop-opacity="0"/>
+                    <stop offset=".8" stop-color="#ffffff" stop-opacity="0"/>
+                   <stop offset="1" stop-color="#1B49B8" stop-opacity=".6"/>
+                  </linearGradient>
+                  <linearGradient id="gPlate" x1="0" y1="0" x2="0" y2="1">
+                   <stop offset="0" stop-color="#0077F6"/>
+                    <stop offset="1" stop-color="#1B49B8"/>
+                  </linearGradient>
+                  <linearGradient id="gShackle" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#93C5FD"/>
+                    <stop offset=".35" stop-color="#F8FAFC"/>
+                    <stop offset=".62" stop-color="#D4E6F1"/>
+                    <stop offset="1" stop-color="#93C5FD"/>
+                  </linearGradient>
+                </defs>
+
+                <!-- Shackle (drawn first so the body covers its legs) -->
+                <g class="shackle">
+                  <path d="M92 168V104a58 58 0 0 1 116 0V224" fill="none" stroke="#1B49B8" stroke-width="32" stroke-linecap="round"/>
+                  <path d="M92 168V104a58 58 0 0 1 116 0V224" fill="none" stroke="url(#gShackle)" stroke-width="24" stroke-linecap="round"/>
+                </g>
+
+                <!-- Body -->
+                <g class="lock-body">
+                  <rect x="40" y="150" width="220" height="190" rx="38" fill="url(#gBody)" stroke="#1B49B8" stroke-width="2"/>
+                  <rect x="40" y="150" width="220" height="190" rx="38" fill="url(#gSide)"/>
+                  <path d="M62 168c26-12 150-12 176 0" fill="none" stroke="#ffffff" stroke-opacity=".85" stroke-width="3" stroke-linecap="round"/>
+                  <rect x="64" y="180" width="172" height="136" rx="26" fill="url(#gPlate)"/>
+                  <rect x="64" y="180" width="172" height="136" rx="26" fill="none" stroke="#ffffff" stroke-opacity=".18"/>
+
+                  <!-- Status lights: red while open, green once locked -->
+                  <circle class="led" cx="128" cy="200" r="4.5"/>
+                  <circle class="led" cx="150" cy="200" r="4.5"/>
+                  <circle class="led" cx="172" cy="200" r="4.5"/>
+
+                  <!-- Keyhole -->
+                  <circle cx="150" cy="252" r="28" fill="#0B132B" stroke="#93C5FD" stroke-opacity=".5" stroke-width="2"/>
+                  <circle class="lock-ring" cx="150" cy="252" r="28" fill="none" stroke="#D4E6F1" stroke-width="3"/>
+                  <circle cx="150" cy="246" r="10" fill="#F8FAFC"/>
+                  <path d="M144 252h12l4 26h-20z" fill="#F8FAFC"/>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero text -->
+    <div class="hero-content" id="home">
+      <p class="eyebrow">SMART SECURITY. REAL PROTECTION.</p>
+      <h1>SECURITY THAT GOES<br>BEYOND PROTECTS YOUR<br>WORLD</h1>
+      <p class="hero-subtitle">Complete security solutions designed around you and your property.</p>
+      <div class="hero-actions">
+        <button class="primary-btn" type="button" data-account="signup" aria-controls="accountPanel">Sign Up</button>
+        <button class="ghost-btn" type="button" data-account="login" aria-controls="accountPanel">Log In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dim layer used on tablet / mobile when the sidebar slides over the page -->
+  <div class="panel-scrim" id="panelScrim"></div>
+</header>
+
+  <main>
+    <!-- =========================================================
+         OUR WORKS — project gallery + project detail
+         Cards and detail content are generated by LandingPage.js
+         from BW_DATA.projects in LandingPageData.js (add new projects there).
+         ========================================================= -->
+    <section class="section works-section" id="works" aria-labelledby="worksTitle">
+
+      <!-- Background layer: glows, grid, circuit traces, mouse-responsive dots (behind everything) -->
+      <div class="works-bg" aria-hidden="true">
+        <canvas class="works-particles" id="worksParticles"></canvas>
+
+        <svg class="works-circuit works-circuit--top" viewBox="0 0 440 240" focusable="false">
+          <path d="M440 40H300l-30 30H170l-24-24H60"/>
+          <path d="M440 96H330l-22 22H214"/>
+          <path d="M440 168H360l-40-40h-50"/>
+          <path d="M300 40v-40M214 118v60l-26 26H90"/>
+          <path class="works-signal" d="M440 40H300l-30 30H170l-24-24H60"/>
+          <circle cx="60" cy="46" r="3"/>
+          <circle cx="214" cy="118" r="3"/>
+          <circle cx="270" cy="128" r="3"/>
+          <circle cx="90" cy="204" r="3"/>
+          <circle cx="300" cy="0" r="2.5"/>
+        </svg>
+
+        <svg class="works-circuit works-circuit--bottom" viewBox="0 0 440 240" focusable="false">
+          <path d="M440 60H320l-26 26H190l-30-30H40"/>
+          <path d="M440 132H300l-24 24H150"/>
+          <path d="M190 86v70l-20 20H60"/>
+          <path class="works-signal" d="M440 132H300l-24 24H150"/>
+          <circle cx="40" cy="56" r="3"/>
+          <circle cx="150" cy="156" r="3"/>
+          <circle cx="60" cy="176" r="3"/>
+        </svg>
+      </div>
+
+      <!-- Header + gallery controls -->
+      <div class="works-head">
+        <div class="works-heading">
+          <span class="works-eyebrow"><span class="works-eyebrow__node"></span>Our Works</span>
+          <h2 id="worksTitle">Security Solutions in <span class="works-accent">Action</span></h2>
+          <p>Explore selected installations and projects completed for different properties.</p>
+        </div>
+
+        <div class="works-controls" id="worksControls">
+          <span class="works-counter" aria-live="polite">
+            <span class="works-counter__current" id="worksCurrent">01</span>
+            <span class="works-counter__sep" aria-hidden="true"></span>
+            <span id="worksTotal">01</span>
+          </span>
+          <button class="works-nav-btn" type="button" id="worksPrev" aria-label="Previous projects" aria-controls="worksTrack">
+            <span class="material-icons-round" aria-hidden="true">chevron_left</span>
+          </button>
+          <button class="works-nav-btn" type="button" id="worksNext" aria-label="Next projects" aria-controls="worksTrack">
+            <span class="material-icons-round" aria-hidden="true">chevron_right</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Horizontal project gallery -->
+      <div class="works-gallery" id="worksGallery">
+        <ul class="works-track" id="worksTrack" aria-label="Completed security projects"></ul>
+        <div class="works-progress" aria-hidden="true">
+          <span class="works-progress__bar" id="worksProgressBar"></span>
+        </div>
+      </div>
+
+      <!-- Project detail (opens below the gallery when a project is selected) -->
+      <div class="project-detail" id="projectDetail" hidden>
+        <div class="project-detail__clip">
+          <article class="project-detail__panel" id="projectDetailPanel" tabindex="-1" aria-labelledby="pdTitle">
+
+            <header class="project-detail__bar">
+              <p class="project-detail__crumb">
+                <span class="material-icons-round" aria-hidden="true">shield</span>
+                <span>Our Works</span>
+                <span class="material-icons-round" aria-hidden="true">chevron_right</span>
+                <strong id="pdCrumb"></strong>
+              </p>
+              <div class="project-detail__actions">
+                <button class="project-detail__icon-btn" type="button" id="pdPrev" aria-label="Previous project">
+                  <span class="material-icons-round" aria-hidden="true">arrow_back</span>
+                </button>
+                <button class="project-detail__icon-btn" type="button" id="pdNext" aria-label="Next project">
+                  <span class="material-icons-round" aria-hidden="true">arrow_forward</span>
+                </button>
+                <button class="project-detail__icon-btn" type="button" id="pdClose" aria-label="Close project details">
+                  <span class="material-icons-round" aria-hidden="true">close</span>
+                </button>
+              </div>
+            </header>
+
+            <div class="project-detail__grid">
+              <!-- Left: project information -->
+              <div class="project-detail__info">
+                <span class="project-detail__type" id="pdType"></span>
+                <h3 class="project-detail__title" id="pdTitle"></h3>
+                <p class="project-detail__desc" id="pdDesc"></p>
+
+                <dl class="project-detail__facts">
+                  <div class="project-detail__fact"><dt>Client / Property</dt><dd id="pdClient"></dd></div>
+                  <div class="project-detail__fact"><dt>Project Type</dt><dd id="pdProjectType"></dd></div>
+                  <div class="project-detail__fact"><dt>Service Scope</dt><dd id="pdScope"></dd></div>
+                  <div class="project-detail__fact"><dt>Status</dt><dd><span class="project-status" id="pdStatus"></span></dd></div>
+                </dl>
+
+                <h4 class="project-detail__sub">Systems Installed</h4>
+                <ul class="project-chips" id="pdSystems"></ul>
+
+                <button class="primary-btn project-detail__cta" type="button" data-account="login">
+                  Request a Similar Setup
+                  <span class="material-icons-round" aria-hidden="true">arrow_forward</span>
+                </button>
+              </div>
+
+              <!-- Right: project images -->
+              <div class="project-detail__media">
+                <figure class="project-detail__main">
+                  <img id="pdMainImg" src="" alt="">
+                  <span class="project-card__frame" aria-hidden="true"></span>
+                  <figcaption class="project-detail__caption">
+                    <span class="material-icons-round" aria-hidden="true">photo_camera</span>
+                    <span id="pdCaption"></span>
+                  </figcaption>
+                </figure>
+                <ul class="project-detail__thumbs" id="pdThumbs" aria-label="Project photos"></ul>
+              </div>
+            </div>
+
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section services-section" id="services">
+      <div class="services-bg" aria-hidden="true"></div>
+      <div class="section-heading">
+        <span class="section-label">OUR SERVICES</span>
+        <h2>Protection built around your needs</h2>
+        <p>From installation to maintenance, we provide dependable security services.</p>
+      </div>
+  
+      <div class="service-grid">
+  <div class="service-card"><span class="material-icons-round">visibility</span><h3>Ocular / Site Visit</h3><p>On-site inspection to assess your property and security needs.</p></div>
+  <div class="service-card"><span class="material-icons-round">construction</span><h3>Installation</h3><p>Professional setup of cameras and security equipment.</p></div>
+  <div class="service-card"><span class="material-icons-round">plumbing</span><h3>Rough-ins, Piping, Molding</h3><p>Clean, concealed cable routing and conduit work.</p></div>
+  <div class="service-card"><span class="material-icons-round">smartphone</span><h3>Mobile Viewing Configuration</h3><p>View your cameras remotely from your phone.</p></div>
+  <div class="service-card"><span class="material-icons-round">video_library</span><h3>CCTV Footage Retrieval</h3><p>Locating, reviewing and retrieving recorded footage, including for investigations or legal use.</p></div>
+</div>
+    </section>
+
+    <!-- =========================================================
+         OUR PRODUCTS — compact product catalog (informational only)
+         Cards, filters and window content are generated by LandingPage.js
+         from the Admin "Products" tab (add or archive products there; no prices are shown).
+         ========================================================= -->
+    <section class="section products-section" id="products" aria-labelledby="productsTitle">
+
+      <!-- Background layer: glows, grid, diagonal lines, network traces, cursor light (behind the cards) -->
+      <div class="products-bg" id="productsBg" aria-hidden="true">
+        <svg class="products-network" viewBox="0 0 360 220" focusable="false">
+          <path d="M360 30H250l-30 30H120M220 60v60l24 24h116M120 60 70 110v80M244 144l-40 40H90"/>
+          <circle cx="120" cy="60" r="3"/>
+          <circle cx="220" cy="120" r="3"/>
+          <circle cx="70" cy="190" r="3"/>
+          <circle cx="90" cy="184" r="3"/>
+          <circle cx="250" cy="30" r="2.5"/>
+        </svg>
+      </div>
+
+      <div class="products-heading">
+        <span class="products-eyebrow">Our Products</span>
+        <h2 id="productsTitle">Reliable equipment for every layer of protection</h2>
+        <p>Choose from dependable security products for homes, offices, and commercial spaces.</p>
+      </div>
+
+      <!-- Category filter (buttons generated from the product data) -->
+      <div class="catalog-filters" id="catalogFilters" role="group" aria-label="Filter products by category"></div>
+
+      <!-- Product cards -->
+      <ul class="catalog-grid" id="catalogGrid" aria-label="Security products"></ul>
+    </section>
+
+    <!-- =========================================================
+         PACKAGES — recommended security solutions (informational only)
+         Cards are generated by LandingPage.js from BW_DATA.packages in LandingPageData.js.
+         ========================================================= -->
+    <section class="section packages-section" id="packages" aria-labelledby="packagesTitle">
+      <div class="section-bg section-bg--packages" aria-hidden="true"></div>
+
+      <div class="bw-heading">
+        <span class="bw-eyebrow">Packages</span>
+        <h2 id="packagesTitle">Security packages for different needs</h2>
+        <p>Start with a recommended package and customize it according to your property.</p>
+      </div>
+
+      <ul class="package-showcase" id="packageGrid" aria-label="Security packages"></ul>
+
+      <p class="package-note-line">
+        <span class="material-icons-round" aria-hidden="true">tune</span>
+        Every package can be adjusted after a site visit to match your property.
+      </p>
+    </section>
+
+    <!-- =========================================================
+         FAQ — accordion (toggled by LandingPage.js, section 6)
+         ========================================================= -->
+    <section class="section faq-section" id="faq" aria-labelledby="faqTitle">
+      <div class="section-bg section-bg--faq" aria-hidden="true">
+        <svg class="section-bg__lines" viewBox="0 0 400 260" focusable="false">
+          <path d="M0 40h120l30 30h110l30-30h110M150 70v80l-30 30H0M260 70v120l24 24h116"/>
+          <circle cx="150" cy="150" r="3"/><circle cx="260" cy="190" r="3"/><circle cx="120" cy="180" r="3"/><circle cx="290" cy="40" r="2.5"/>
+        </svg>
+      </div>
+
+      <div class="faq-layout">
+        <div class="faq-intro">
+          <span class="bw-eyebrow bw-eyebrow--left">Frequently Asked Questions</span>
+          <h2 id="faqTitle">Have questions?</h2>
+          <p>Quick answers about our security systems, site visits and installation. Select a question to see its answer.</p>
+
+          <aside class="faq-help" aria-label="Need more help">
+            <span class="faq-help__icon material-icons-round" aria-hidden="true">support_agent</span>
+            <div class="faq-help__text">
+              <h3>Still have a question?</h3>
+              <p>Our team can walk you through the right setup for your property.</p>
+            </div>
+            <button class="bw-btn bw-btn--outline bw-btn--sm" type="button" data-scroll="#contact">
+              Contact Us
+              <span class="material-icons-round" aria-hidden="true">arrow_forward</span>
+            </button>
+          </aside>
+        </div>
+
+        <ul class="faq-accordion" id="faqAccordion">
+          <li class="faq-card">
+            <h3 class="faq-card__heading">
+              <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faqPanel1" id="faqBtn1">
+                <span class="faq-toggle__num" aria-hidden="true">01</span>
+                <span class="faq-toggle__text">What types of security systems do you install?</span>
+                <span class="faq-toggle__icon material-icons-round" aria-hidden="true">expand_more</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faqPanel1" role="region" aria-labelledby="faqBtn1">
+              <div class="faq-panel__inner"><p>We install CCTV, access control, alarm systems, network security equipment, and other integrated security solutions.</p></div>
+            </div>
+          </li>
+          <li class="faq-card">
+            <h3 class="faq-card__heading">
+              <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faqPanel2" id="faqBtn2">
+                <span class="faq-toggle__num" aria-hidden="true">02</span>
+                <span class="faq-toggle__text">Can you inspect my property before installation?</span>
+                <span class="faq-toggle__icon material-icons-round" aria-hidden="true">expand_more</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faqPanel2" role="region" aria-labelledby="faqBtn2">
+              <div class="faq-panel__inner"><p>Yes. A site inspection can be used to identify security requirements and determine suitable equipment and placement.</p></div>
+            </div>
+          </li>
+          <li class="faq-card">
+            <h3 class="faq-card__heading">
+              <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faqPanel3" id="faqBtn3">
+                <span class="faq-toggle__num" aria-hidden="true">03</span>
+                <span class="faq-toggle__text">How long does installation take?</span>
+                <span class="faq-toggle__icon material-icons-round" aria-hidden="true">expand_more</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faqPanel3" role="region" aria-labelledby="faqBtn3">
+              <div class="faq-panel__inner"><p>A typical installation depends on the equipment and the size of the property. After the site visit, we can give you an estimated schedule.</p></div>
+            </div>
+          </li>
+          <li class="faq-card">
+            <h3 class="faq-card__heading">
+              <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faqPanel4" id="faqBtn4">
+                <span class="faq-toggle__num" aria-hidden="true">04</span>
+                <span class="faq-toggle__text">Can I request a customized security setup?</span>
+                <span class="faq-toggle__icon material-icons-round" aria-hidden="true">expand_more</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faqPanel4" role="region" aria-labelledby="faqBtn4">
+              <div class="faq-panel__inner"><p>Yes. Customized solutions can be planned based on your property, coverage requirements, equipment needs, and operational priorities.</p></div>
+            </div>
+          </li>
+          <li class="faq-card">
+            <h3 class="faq-card__heading">
+              <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faqPanel5" id="faqBtn5">
+                <span class="faq-toggle__num" aria-hidden="true">05</span>
+                <span class="faq-toggle__text">Do you provide maintenance and repair?</span>
+                <span class="faq-toggle__icon material-icons-round" aria-hidden="true">expand_more</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faqPanel5" role="region" aria-labelledby="faqBtn5">
+              <div class="faq-panel__inner"><p>Yes. Maintenance and repair services are available to help keep installed security equipment operating properly.</p></div>
+            </div>
+          </li>
+          <li class="faq-card">
+            <h3 class="faq-card__heading">
+              <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faqPanel6" id="faqBtn6">
+                <span class="faq-toggle__num" aria-hidden="true">06</span>
+                <span class="faq-toggle__text">How do I request a quotation?</span>
+                <span class="faq-toggle__icon material-icons-round" aria-hidden="true">expand_more</span>
+              </button>
+            </h3>
+            <div class="faq-panel" id="faqPanel6" role="region" aria-labelledby="faqBtn6">
+              <div class="faq-panel__inner"><p>Use the inquiry or contact option to provide your requirements. The security team can then assess the project and prepare the appropriate quotation.</p></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         BEGIN YOUR SECURE TRANSITION — main call to action
+         ========================================================= -->
+    <section class="cta-section" id="contact" aria-labelledby="ctaTitle">
+      <article class="cta-panel">
+        <div class="cta-panel__bg" aria-hidden="true"></div>
+
+        <div class="cta-copy">
+          <span class="bw-eyebrow bw-eyebrow--left">Begin Your Secure Transition</span>
+          <h2 id="ctaTitle">Let's secure what matters to you.</h2>
+          <p>Protect your property with modern security solutions tailored to your needs. Tell us about your property and we'll recommend the right setup.</p>
+
+          <div class="cta-actions">
+            <button class="bw-btn bw-btn--solid" type="button" id="ctaConsult">
+              Request Consultation
+              <span class="material-icons-round" aria-hidden="true">arrow_forward</span>
+            </button>
+            <button class="bw-btn bw-btn--outline" type="button" data-scroll="#services">
+              Explore Solutions
+            </button>
+          </div>
+
+          <ul class="cta-contacts">
+            <li><span class="material-icons-round" aria-hidden="true">location_on</span>Rosal Street, Brgy 187 Tala, Caloocan City 1427</li>
+            <li><span class="material-icons-round" aria-hidden="true">phone</span><a href="tel:+639752037668">+63 975 203 7668</a> / <a href="tel:+639453296845">+63 945 329 6845</a></li>
+            <li><span class="material-icons-round" aria-hidden="true">email</span><a href="mailto:beyondwires4demo@gmail.com">beyondwires4demo@gmail.com</a></li>
+          </ul>
+        </div>
+
+        <!-- Abstract security illustration: shield hub connected to devices -->
+        <div class="cta-visual" aria-hidden="true">
+          <svg class="cta-graphic" viewBox="0 0 400 340" focusable="false">
+            <circle class="cta-ring cta-ring--1" cx="200" cy="170" r="70"/>
+            <circle class="cta-ring cta-ring--2" cx="200" cy="170" r="110"/>
+            <circle class="cta-ring cta-ring--3" cx="200" cy="170" r="150"/>
+            <circle class="cta-pulse" cx="200" cy="170" r="62"/>
+
+            <path class="cta-link" d="M200 170L82 74M200 170L322 70M200 170L66 258M200 170L334 262"/>
+            <path class="cta-signal" d="M200 170L82 74"/>
+            <path class="cta-signal cta-signal--b" d="M200 170L334 262"/>
+
+            <g class="cta-shield">
+              <path class="cta-shield__base" d="M200 116l44 16v34c0 30-19 50-44 60-25-10-44-30-44-60v-34z"/>
+              <path class="cta-shield__body" d="M200 116l44 16v34c0 30-19 50-44 60-25-10-44-30-44-60v-34z"/>
+              <path class="cta-shield__check" d="M184 170l11 11 22-24"/>
+            </g>
+
+            <g class="cta-node" transform="translate(82 74)"><circle r="24"/><path class="cta-node__glyph" d="M-10-4h14l6-4v16l-6-4h-14z"/></g>
+            <g class="cta-node" transform="translate(322 70)"><circle r="24"/><path class="cta-node__glyph" d="M-6-1v-4a6 6 0 0 1 12 0v4M-9-1h18v13h-18z"/></g>
+            <g class="cta-node" transform="translate(66 258)"><circle r="24"/><path class="cta-node__glyph" d="M-7 4a7 7 0 0 1 14 0M-4 8v-4a4 4 0 0 1 8 0v6M-10-2a11 11 0 0 1 20 0"/></g>
+            <g class="cta-node" transform="translate(334 262)"><circle r="24"/><path class="cta-node__glyph" d="M-10 2h20M-10-4h20v14h-20zM-4 10v4h8v-4"/></g>
+          </svg>
+
+          <span class="cta-status cta-status--top"><span class="cta-status__dot"></span>System protected</span>
+          <span class="cta-status cta-status--bottom"><span class="material-icons-round">verified_user</span>CCTV · Access · Locks</span>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- =========================================================
+       FOOTER
+       ========================================================= -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="footer-logo" href="#top" aria-label="BeyondWires — back to top">
+          <img class="footer-logo__img footer-logo__img--light" src="../Assets/forLighModeLogo.jpg" alt="BeyondWires">
+          <img class="footer-logo__img footer-logo__img--dark" src="../Assets/fullbwlogo.png" alt="BeyondWires">
+        </a>
+        <p>Security system services for homes and businesses: CCTV, access control, smart locks and solar lighting, from site visit to after-sales support.</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/beyondwirescctv" target="_blank" rel="noopener" aria-label="BeyondWires on Facebook"><span class="material-icons-round" aria-hidden="true">facebook</span></a>
+          <a href="mailto:beyondwires4demo@gmail.com" aria-label="Email BeyondWires"><span class="material-icons-round" aria-hidden="true">mail</span></a>
+        </div>
+      </div>
+
+      <nav class="footer-col" aria-label="Quick links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#works">Our Works</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#packages">Packages</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#" id="footerAccount">My Account</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-col" aria-label="Services">
+        <h3>Services</h3>
+        <ul>
+          <li><a href="#services">Ocular / Site Visit</a></li>
+          <li><a href="#services">Installation</a></li>
+          <li><a href="#services">Rough-ins, Piping, Molding</a></li>
+          <li><a href="#services">Mobile Viewing Setup</a></li>
+          <li><a href="#services">CCTV Footage Retrieval</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-col footer-col--contact">
+        <h3>Contact</h3>
+        <ul>
+          <li><span class="material-icons-round" aria-hidden="true">location_on</span>Rosal Street, Brgy 187 Tala, Caloocan City 1427</li>
+          <li><span class="material-icons-round" aria-hidden="true">phone</span><a href="tel:+639752037668">+63 975 203 7668</a> / <a href="tel:+639453296845">+63 945 329 6845</a></li>
+          <li><span class="material-icons-round" aria-hidden="true">email</span><a href="mailto:beyondwires4demo@gmail.com">beyondwires4demo@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; <span id="footerYear">2026</span> BeyondWires Security Systems Services. All rights reserved.</p>
+      <a class="footer-top" href="#top">
+        Back to top <span class="material-icons-round" aria-hidden="true">arrow_upward</span>
+      </a>
+    </div>
+  </footer>
+
+  <div class="account-modal" id="accountModal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close"><span class="material-icons-round">close</span></button>
+      <span class="material-icons-round account-large">account_circle</span>
+      <h2 id="accountTitle">Welcome</h2>
+      <p>Log in to your account or create a new one to continue.</p>
+      <button class="primary-btn full" id="loginBtn">Log In</button>
+      <button class="ghost-btn full" id="createBtn">Create Account</button>
+    </div>
+  </div>
+
+
+  <!-- Shared information window (BWDetailModal in LandingPage.js, used by Packages) -->
+  <div class="catalog-modal" id="detailModal" aria-hidden="true">
+    <div class="catalog-modal__backdrop" data-modal-close></div>
+
+    <div class="catalog-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="dmTitle" aria-describedby="dmDesc" tabindex="-1">
+      <button class="catalog-modal__icon-btn catalog-modal__x" type="button" data-modal-close aria-label="Close details">
+        <span class="material-icons-round" aria-hidden="true">close</span>
+      </button>
+
+      <!-- Left: visual -->
+      <div class="catalog-modal__visual">
+        <span class="catalog-modal__cat">
+          <span class="material-icons-round" aria-hidden="true" id="dmCatIcon">category</span>
+          <span id="dmCategory"></span>
+        </span>
+
+        <div class="catalog-modal__art-wrap">
+          <span class="catalog-card__rings" aria-hidden="true"></span>
+          <div class="catalog-modal__art" id="dmArt"></div>
+        </div>
+
+        <div class="catalog-modal__browse" id="dmBrowse">
+          <span class="catalog-modal__count" aria-live="polite"><strong id="dmIndex">01</strong> / <span id="dmTotal">01</span></span>
+          <div class="catalog-modal__browse-btns">
+            <button class="catalog-modal__icon-btn" type="button" id="dmPrev" aria-label="Previous item">
+              <span class="material-icons-round" aria-hidden="true">chevron_left</span>
+            </button>
+            <button class="catalog-modal__icon-btn" type="button" id="dmNext" aria-label="Next item">
+              <span class="material-icons-round" aria-hidden="true">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: information -->
+      <div class="catalog-modal__info">
+        <h3 class="catalog-modal__title" id="dmTitle"></h3>
+        <p class="catalog-modal__desc" id="dmDesc"></p>
+        <div id="dmSections"></div>
+
+        <div class="catalog-modal__foot">
+          <button class="ghost-btn" type="button" id="dmAsk">Ask About This</button>
+          <button class="primary-btn catalog-modal__close-btn" type="button" data-modal-close>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="../JS/Landingpagedata.js" defer></script>
+  <script src="../JS/LandingPage.js?v=20261022b" defer></script>
+  <script src="../JS/api.js" defer></script>
+</body>
+</html>

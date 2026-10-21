@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Sign In | BeyondWires</title>
+<!-- Admin / Super Admin sign in. Not linked on the public pages: staff bookmark this page.
+     Logic: JS/Super&AdminAccount.js. The server checks the password AND the role (api/auth.php). -->
+<link rel="icon" type="image/png" href="../Assets/BWLOGO.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+  (function () {   // same theme as the landing page (saved choice, light by default)
+    var dark = false;
+    try { dark = localStorage.getItem("theme") === "dark"; } catch (e) {}
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  })();
+</script>
+<style>
+  :root { --bg:#f3f6fb; --card:#ffffff; --text:#0f172a; --muted:#64748b; --line:#dbe3ee; --input:#f8fafc; --blue:#0077F6; --blue-dark:#1B49B8; --warn-bg:#fff7e6; --warn:#9a6700; --err-bg:#fdecec; --err:#c62828; }
+  :root[data-theme="dark"] { --bg:#080B11; --card:#101826; --text:#e5ecf7; --muted:#94a3b8; --line:#22324f; --input:#0c1424; --warn-bg:#2a2210; --warn:#f5c451; --err-bg:#2c1416; --err:#f87171; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; background: var(--bg); color: var(--text); font-family: Inter, Arial, sans-serif; }
+  .card { width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 34px 30px 26px; box-shadow: 0 20px 45px rgba(15,23,42,.12); }
+  .logo { display: block; width: 72px; height: 72px; margin: 0 auto 14px; border-radius: 50%; object-fit: cover; }
+  h1 { text-align: center; font-size: 22px; font-weight: 800; }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin: 6px 0 18px; }
+  .note { display: flex; gap: 10px; align-items: flex-start; background: var(--warn-bg); color: var(--warn); border-radius: 10px; padding: 10px 12px; font-size: 13px; margin-bottom: 18px; }
+  .field { display: block; margin-bottom: 14px; }
+  .field > span { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .field input { width: 100%; height: 44px; border: 1px solid var(--line); border-radius: 10px; padding: 0 14px; background: var(--input); color: var(--text); font: inherit; font-size: 14px; outline: none; }
+  .field input:focus { border-color: var(--blue); }
+  .field input.invalid { border-color: var(--err); }
+  .pw { position: relative; }
+  .pw input { padding-right: 44px; }
+  .pw i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; line-height: 20px; text-align: center; color: var(--muted); cursor: pointer; }
+  .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .role-opt { height: 42px; border: 1px solid var(--line); border-radius: 10px; background: var(--input); color: var(--text); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .role-opt.active { border-color: var(--blue); background: rgba(0,119,246,.1); color: var(--blue); }
+  .error { display: none; background: var(--err-bg); color: var(--err); border-radius: 10px; padding: 10px 12px; font-size: 13px; margin-bottom: 14px; }
+  .error.show { display: block; }
+  .btn { width: 100%; height: 46px; border: 0; border-radius: 10px; background: var(--blue); color: #fff; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
+  .btn:hover { background: var(--blue-dark); }
+  .btn:disabled { opacity: .6; cursor: wait; }
+  .back { display: block; text-align: center; margin-top: 16px; color: var(--blue); font-size: 14px; font-weight: 600; text-decoration: none; }
+  .foot { text-align: center; color: var(--muted); font-size: 12px; margin-top: 16px; }
+</style>
+<script src="../JS/api.js" defer></script>
+<script src="../JS/Super&AdminAccount.js?v=20261022" defer></script>
+</head>
+<body>
+  <main class="card">
+    <img class="logo" src="../Assets/collapasedLogoLight.jpg" alt="BeyondWires">
+    <h1>Staff Sign In</h1>
+    <p class="sub">Please enter your credentials to access your account.</p>
+    <div class="note" role="note"><i class="fa-solid fa-triangle-exclamation"></i><span><strong>Restricted area:</strong> access limited to authorized administrators only.</span></div>
+
+    <form id="loginForm" novalidate autocomplete="off">
+      <div class="field">
+        <span id="roleLabel">Sign in as</span>
+        <div class="roles" id="rolePicker" role="radiogroup" aria-labelledby="roleLabel">
+          <button type="button" class="role-opt active" data-role="admin" role="radio" aria-checked="true">Admin</button>
+          <button type="button" class="role-opt" data-role="superadmin" role="radio" aria-checked="false">Super Admin</button>
+        </div>
+      </div>
+      <label class="field"><span>Email Address</span>
+        <input id="email" type="text" placeholder="name@company.com" autocomplete="off" readonly>
+      </label>
+      <label class="field"><span>Password</span>
+        <span class="pw"><input id="password" type="password" placeholder="Enter your password" autocomplete="off" readonly><i class="fa-solid fa-eye" id="togglePassword" role="button" aria-label="Show password"></i></span>
+      </label>
+      <div class="error" id="loginError" role="alert"></div>
+      <button class="btn" type="submit" id="submitBtn">Log In as Admin</button>
+    </form>
+
+    <a class="back" href="LandingPage.html" style="margin-top:8px">Go back to homepage</a>
+    <p class="foot"><i class="fa-solid fa-lock"></i> Secure access by BeyondWires</p>
+  </main>
+</body>
+</html>

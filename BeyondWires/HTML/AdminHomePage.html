@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Beyond Wires</title>
+    <link rel="stylesheet" href="../CSS/AdminHomePage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../CSS/BWTheme.css">
+    <!-- Theme is applied before the first paint. No saved choice = Light Mode. -->
+<script>
+  (function () {
+    var t = 'light';
+    try { t = JSON.parse(localStorage.getItem('bw_admin_theme')) === 'dark' ? 'dark' : 'light'; } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
+    <script src="../JS/api.js" defer></script>
+    <script src="../JS/AdminHomePage.js" defer></script>
+</head>
+<body class="bw-admin">
+<div class="dashboard-layout" id="app">
+
+    <!-- ===== Sidebar (ordered like the customer journey) ===== -->
+    <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <img src="../Assets/forLighModeLogo.jpg" alt="Beyond Wires Logo" class="sidebar-logo logo-light" onerror="this.onerror=null;this.src='../Assets/bcklogo-removebg-preview.png'">
+        <img src="../Assets/fullbwlogo.png" alt="Beyond Wires Logo" class="sidebar-logo logo-dark">
+        <img src="../Assets/collapasedLogoLight.png" alt="Beyond Wires" class="logo-mini logo-light">
+        <img src="../Assets/BWLOGO.png" alt="Beyond Wires" class="logo-mini logo-dark">
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+        <a href="#dashboard" class="nav-item active" data-tab="dashboard" title="Dashboard"><i class="fa-solid fa-house"></i><span class="label">Dashboard</span></a>
+        <a href="#inquiries" class="nav-item" data-tab="inquiries" title="Inquiries"><i class="fa-solid fa-inbox"></i><span class="label">Inquiries</span></a>
+        <a href="#quotations" class="nav-item" data-tab="quotations" title="Quotation"><i class="fa-solid fa-file-invoice"></i><span class="label">Quotation</span></a>
+        <a href="#projects" class="nav-item" data-tab="projects" title="Projects"><i class="fa-solid fa-briefcase"></i><span class="label">Projects</span></a>
+        <a href="#schedules" class="nav-item" data-tab="schedules" title="Schedules"><i class="fa-regular fa-calendar"></i><span class="label">Schedules</span></a>
+        <a href="#products" class="nav-item" data-tab="products" title="Products"><i class="fa-solid fa-boxes-stacked"></i><span class="label">Products</span></a>
+    </nav>
+    <div class="sidebar-section">
+        <span class="section-title">SYSTEM SUPPORT</span>
+        <a href="#settings" class="nav-item" data-tab="settings" title="Settings"><i class="fa-solid fa-gear"></i><span class="label">Settings</span></a>
+    </div>
+    </aside>
+
+    <main class="main-content">
+        <!-- ===== Header (no profile picture) ===== -->
+        <header class="top-bar">
+        <div class="page-breadcrumb-group">
+            <span class="breadcrumb-trail">BEYOND WIRES &middot; ADMIN</span>
+            <div class="title-row">
+            <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Minimize sidebar" title="Minimize sidebar"><i class="fa-solid fa-angles-left"></i></button>
+            <h1 id="pageTitle"></h1>
+            </div>
+            <p id="pageSubtitle"></p>
+        </div>
+        <div class="user-profile-area">
+            <div class="dropdown-container">
+            <button class="notification-btn" id="notif-btn" data-dd="notif-dropdown" aria-label="Notifications">
+                <i class="fa-regular fa-bell"></i><span class="notification-dot" id="notif-dot"></span>
+            </button>
+            <div class="dropdown-menu notif-menu" id="notif-dropdown" data-keep>
+            <div class="dropdown-header"><strong>Notifications</strong><span class="mark-read" id="mark-read" role="button" tabindex="0">Mark all read</span></div>
+            <div class="notif-list" id="notif-list"></div>
+            </div>
+            </div>
+            <div class="dropdown-container">
+            <div class="profile-card" id="profile-btn" data-dd="profile-dropdown" tabindex="0">
+                <span class="profile-avatar"><i class="fa-regular fa-user"></i></span>
+                <div class="profile-info"><span class="profile-name" id="top-name">Admin NOC</span><span class="profile-role">Administrator</span></div>
+                <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+            </div>
+            <div class="dropdown-menu profile-menu" id="profile-dropdown">
+            <button class="menu-btn" id="my-profile"><i class="fa-regular fa-user"></i> My Profile</button>
+            <button class="menu-btn danger" id="logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+            </div>
+            </div>
+            </div>
+        </header>
+
+        <!-- ================= DASHBOARD ================= -->
+        <section class="tab-panel active" id="tab-dashboard">
+            <section class="stats-grid" id="dashStats"></section>
+            <section class="pipeline" id="dashPipeline"></section>
+            <section class="tables-grid">
+                <div class="panel">
+                    <div class="panel-header"><h2>LATEST INQUIRIES</h2><a href="#inquiries" class="view-all" data-tab="inquiries">VIEW ALL</a></div>
+                    <div class="list-container" id="dash-inquiries"></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h2>UPCOMING SCHEDULE</h2><a href="#schedules" class="view-all" data-tab="schedules">VIEW ALL</a></div>
+                    <div class="list-container" id="dash-schedule"></div>
+                </div>
+            </section>
+        </section>
+
+        <!-- ================= INQUIRIES ================= -->
+        <section class="tab-panel" id="tab-inquiries">
+            <div class="pane" id="inqList">
+                <div class="toolbar">
+                    <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="inqSearch" placeholder="Search by name, inquiry ID or property type..."></div>
+                    <div class="tool-group"><label for="statusFilter">STATUS</label>
+                        <select id="statusFilter" class="tool-select">
+                            <option value="all">All Inquiries</option>
+                            <option value="New Inquiry">New Inquiry</option>
+                            <option value="Accepted">Accepted</option>
+                            <option value="Pending Visit">Pending Visit</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="tool-group" style="margin-left:0"><label for="inqCity">PROVINCE</label><select id="inqCity" class="tool-select"><option value="all">All Provinces</option></select></div>
+                </div>
+                <section class="table-section"><div class="table-container" id="inqTable"></div></section>
+            </div>
+            <div class="pane" id="inqBuilder" hidden></div>
+        </section>
+
+        <!-- ================= QUOTATIONS ================= -->
+        <section class="tab-panel" id="tab-quotations">
+            <div class="pane" id="qList">
+                <div class="toolbar">
+                    <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="qSearch" placeholder="Search by quotation no. or customer..."></div>
+                    <div class="tool-group"><label for="qStatusFilter">STATUS</label>
+                        <select id="qStatusFilter" class="tool-select">
+                            <option value="all">All Statuses</option>
+                            <option>Draft</option>
+                            <option>Pending Superadmin</option>
+                            <option>Sent to Customer</option>
+                            <option>Approved</option>
+                            <option>Declined</option>
+                        </select>
+                    </div>
+                </div>
+                <section class="table-section"><div class="table-container" id="qTable"></div></section>
+            </div>
+            <div class="pane" id="qDetail" hidden></div>
+            <div class="pane" id="qBuilder" hidden></div>
+        </section>
+
+        <!-- ================= PROJECTS ================= -->
+        <section class="tab-panel" id="tab-projects">
+            <div class="pane" id="projList">
+                <div class="toolbar">
+                    <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="projSearch" placeholder="Search by customer, project or ID..."></div>
+                    <div class="tool-group"><label for="projType">PROPERTY TYPE</label>
+                        <select id="projType" class="tool-select"><option value="all">All Types</option><option>Commercial</option><option>Residential</option></select></div>
+                    <div class="tool-group" style="margin-left:0"><label for="projStatus">STATUS</label>
+                        <select id="projStatus" class="tool-select">
+                    <option value="all">All Statuses</option>
+                    <option>Quotation Approved</option><option>Payment</option><option>Installation</option><option>Final Payment</option><option>Done</option>
+                        </select></div>
+                    <div class="tool-group" style="margin-left:0"><label for="projCity">PROVINCE</label><select id="projCity" class="tool-select"><option value="all">All Provinces</option></select></div>
+                </div>
+                <div class="section-card"><div class="project-list-items" id="projItems"></div></div>
+            </div>
+            <div class="pane" id="projDetail" hidden></div>
+        </section>
+
+        <!-- ================= SCHEDULES ================= -->
+        <section class="tab-panel" id="tab-schedules">
+            <div class="schedule-grid">
+                <div class="section-card sched-calendar">
+                    <div class="sched-cal-header"><h2><i class="fa-regular fa-calendar" style="color:#3b82f6;margin-right:8px"></i>SCHEDULE CALENDAR</h2><button type="button" class="btn-primary-sm" id="bulkAvail"><i class="fa-solid fa-calendar-plus"></i> Set availability</button></div>
+                    <p class="sched-note">Customers can only book the slots you publish. Pick a day to add or remove its open slots, or use Set availability to publish many days at once.</p>
+                    <div id="schedCal"></div>
+                    <div id="schedDay" class="sched-day"></div>
+                </div>
+                <div class="alerts-sidebar" id="schedReq"></div>
+            </div>
+        </section>
+
+        <!-- ================= PRODUCTS ================= -->
+        <section class="tab-panel" id="tab-products">
+            <div class="pane" id="pdList">
+                <div class="toolbar">
+                    <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="pdSearch" placeholder="Search by name, category or supplier..."></div>
+                    <div class="tool-group"><label for="pdType">TYPE</label>
+                        <select id="pdType" class="tool-select"><option value="all">All Types</option><option value="product">Products</option><option value="service">Services</option><option value="package">Packages</option></select></div>
+                    <div class="tool-group" style="margin-left:0"><label for="pdSup">SUPPLIER</label><select id="pdSup" class="tool-select"></select></div>
+                    <div class="tool-group" style="margin-left:0"><label for="pdCat">CATEGORY</label><select id="pdCat" class="tool-select"></select></div>
+                    <div class="tool-group" style="margin-left:0"><label for="pdShow">SHOW</label>
+                        <select id="pdShow" class="tool-select"><option value="active">Active</option><option value="archived">Archived</option><option value="all">All</option></select></div>
+                    <button type="button" class="btn-primary pd-add" id="pdAdd"><i class="fa-solid fa-plus"></i> Add item</button>
+                </div>
+                <p class="pd-note">Prices here feed the quotation builder. When your supplier changes a price, use Edit price. New quotations use the new price, and existing quotations keep the price they were created with.</p>
+                <section class="table-section"><div class="table-container" id="pdTable"></div></section>
+            </div>
+        </section>
+
+        <!-- ================= SETTINGS ================= -->
+        <section class="tab-panel" id="tab-settings">
+            <div class="tab-toolbar"><span class="st-status" id="stStatus"><i class="fa-solid fa-circle-check"></i><span id="stStatusText">All settings up to date</span></span></div>
+
+            <div class="section-card st-card">
+                <div class="st-card-head"><span class="st-ico"><i class="fa-solid fa-palette"></i></span><div><h3>Theme</h3><p>Choose how BeyondWires looks across your dashboard.</p></div></div>
+                <div class="st-theme-row">
+                    <button type="button" class="st-theme" data-theme-opt="light" aria-pressed="false">
+                        <span class="st-thumb light"><span class="tb-side"></span><span class="tb-main"><span></span><span></span></span></span>
+                        <span class="st-theme-text"><b>Light Mode <em class="st-active">ACTIVE</em></b><small>A bright interface for everyday work.</small></span><span class="st-radio"></span>
+                    </button>
+                    <button type="button" class="st-theme" data-theme-opt="dark" aria-pressed="false">
+                        <span class="st-thumb dark"><span class="tb-side"></span><span class="tb-main"><span></span><span></span></span></span>
+                        <span class="st-theme-text"><b>Dark Mode <em class="st-active">ACTIVE</em></b><small>Reduced glare for low-light environments.</small></span><span class="st-radio"></span>
+                    </button>
+                    <button type="button" class="btn-primary" id="stSaveTheme">Save theme</button>
+                </div>
+            </div>
+
+            <div class="section-card st-card">
+                <div class="st-card-head"><span class="st-ico"><i class="fa-solid fa-user-gear"></i></span><div><h3>Account settings</h3><p>Edit your profile details and keep your sign-in credentials secure.</p></div></div>
+                <div class="st-split">
+                    <form class="st-col" id="stProfileForm" novalidate onsubmit="return false">
+                        <h4 class="st-sec"><i class="fa-regular fa-user"></i> Personal information</h4>
+                        <div class="st-field"><label for="stFullName">Full name</label>
+                            <div class="st-input"><i class="fa-regular fa-user"></i><input type="text" id="stFullName" autocomplete="name"></div><small class="st-err" id="stFullNameErr"></small></div>
+                        <div class="st-field"><label for="stEmail">Email address</label>
+                            <div class="st-input"><i class="fa-regular fa-envelope"></i><input type="text" id="stEmail" autocomplete="email"></div>
+                            <small class="st-hint">Used to log in. Changes are saved when you leave the field.</small><small class="st-err" id="stEmailErr"></small></div>
+                    </form>
+                    <form class="st-col" id="stPwForm" novalidate>
+                        <h4 class="st-sec"><i class="fa-solid fa-lock"></i> Change password</h4>
+                        <div class="st-field"><label for="stCurPw">Current password</label>
+                            <div class="st-input"><input type="password" id="stCurPw" autocomplete="current-password"><button type="button" class="st-eye" data-target="stCurPw" aria-label="Show password"></button></div><small class="st-err" id="stCurPwErr"></small></div>
+                        <div class="st-two">
+                            <div class="st-field"><label for="stNewPw">New password</label>
+                                <div class="st-input"><input type="password" id="stNewPw" autocomplete="new-password"><button type="button" class="st-eye" data-target="stNewPw" aria-label="Show password"></button></div><small class="st-err" id="stNewPwErr"></small></div>
+                            <div class="st-field"><label for="stConfPw">Confirm password</label>
+                                <div class="st-input"><input type="password" id="stConfPw" autocomplete="new-password"><button type="button" class="st-eye" data-target="stConfPw" aria-label="Show password"></button></div><small class="st-err" id="stConfPwErr"></small></div>
+                        </div>
+                        <div class="st-pwhint"><i class="fa-solid fa-circle-info"></i> Use at least 8 characters and include a number.</div>
+                        <div class="st-actions"><button type="submit" class="st-btn-outline">Change password</button></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Generic modal (inquiry details, schedule edit / details / negotiate) -->
+<div id="modalHost" class="modal-overlay"></div>
+<div class="toast" id="toast"></div>
+</body>
+</html>

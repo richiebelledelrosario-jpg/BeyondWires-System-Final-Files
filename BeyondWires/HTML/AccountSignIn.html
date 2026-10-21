@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeyondWires | Account</title>
+  <!-- Log In and Create Account now live in the account sidebar of the landing page.
+       This file only forwards old links (AccountSignIn.html#loginView / #signupView). -->
+  <script>
+    location.replace("LandingPage.html" + (location.hash === "#signupView" ? "#signup" : "#login"));
+  </script>
+</head>
+<body>
+  <p><a href="LandingPage.html#login">Continue to BeyondWires</a></p>
+</body>
+</html>
